@@ -1,0 +1,24 @@
+# Compiled files
+target/
+*.class
+*.jar
+
+# Logs
+logs/
+*.log
+build.log
+
+# Data files (EXCLUDED from GitHub - too large)
+archive/
+ohlcv_output/
+
+# Progress file (user-specific state)
+.master_download_progress.txt
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# OS files
+.DS_Store

@@ -1,0 +1,189 @@
+2026-07-08 13:51:09.758 INFO  com.dukascopy.api.impl.connect.AuthorizationClient - environment(jnlp.client.mode)=DEMO, platformInstanceId=null
+2026-07-08 13:51:09.763 INFO  com.dukascopy.api.impl.connect.AuthorizationClient - Auth step 1 request [5CB2A354BCA35CE4CE5CDE0088975418A2582547]
+2026-07-08 13:51:09.764 DEBUG com.dukascopy.api.impl.connect.AuthorizationClient - >> [https://login.dukascopy.com/authorization-1/demo/auth?munus=srp_api&passus=1&sermo=5cb287b6-153a-4866-8821-a0c134a56cec&putent_genus=0&appello=5CB2A354BCA35CE4CE5CDE0088975418A2582547&obsecro_id=fa4882d1-b155-4c9f-b65f-70affea261ae&srp_versio=1]
+2026-07-08 13:51:10.179 DEBUG com.dukascopy.api.impl.connect.AuthorizationClient - << [{"B":"4eb7bf39b02a3c352864b5012d67799d28fc31b9bfc78fa16d89194393c4e18801ea5cffcd74904d578ce04987ded050eb8f9f130f4066f96e3b53e85927ab19e961ad355ff25e4336ad0a5932b0360adb455eea01c51bb2dce25a24903bf3507956322119359d2ab898438946c66aa35ef78d735483de5ed0a4101766f1c38a166454afc8c1b6af24b132cd3de4cac0d44c90ccf11f9f772d5ef4003031a3701ad1ce4e997e212f1ad72a7ec83c285fe418fcb80e2a2bb27b8445d2caccfb104145550640ee29629dc361de08da94212c70e57f452f1bd73b018a9e3070de1d1a9a0f0d91bc27351064934d48ec93fe5b228fc1cbf6bdae2096efef0564411eb25b8cfe78143d91f7c22f6787162ff81ed0f7f3a1ed93e21d76a682c49ef4918cb3599e9fa66b90992261a4c6a23375c37cf73b7439a38d90542662d5e2365d1392275be25b0677861c4c0bfe9da842ae83f7bf43af7317b1779f2b48e5744de5ef0a9b216f8bbbc1419332946692a94b110292a8e386150e4fdd0aaa5cc314cc6af80d2a22b348f1455ff2f762435b2e4bd3ef4df886a655736a5f62e667ccd69799c06c9c6961be613bba9cf8ec701d9ddcfe606bcfae352ca8ede033d6b4e9a05c4bb7228db30c92dd0f9530826bf8ce08d3046dc74be21ad31e8b4e3ffefa357de0013ace8352303589b892a71934c09f3a97f2991a97fde0d2ccd65da0","S":"27e92868f13889d655d41b1266b1b989","G":"5","H":"SHA-256","K":"3509477ea9fca66eadb7cf7b1bd0eb508f54d3989a9c988006a7d0b338374dd2","N":"ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca18217c32905e462e36ce3be39e772c180e86039b2783a2ec07a28fb5c55df06f4c52c9de2bcbf6955817183995497cea956ae515d2261898fa051015728e5a8aaac42dad33170d04507a33a85521abdf1cba64ecfb850458dbef0a8aea71575d060c7db3970f85a6e1e4c7abf5ae8cdb0933d71e8c94e04a25619dcee3d2261ad2ee6bf12ffa06d98a0864d87602733ec86a64521f2b18177b200cbbe117577a615d6c770988c0bad946e208e24fa074e5ab3143db5bfce0fd108e4b82d120a92108011a723c12a787e6d788719a10bdba5b2699c327186af4e23c1a946834b6150bda2583e9ca2ad44ce8dbbbc2db04de8ef92e8efc141fbecaa6287c59474e6bc05d99b2964fa090c3a2233ba186515be7ed1f612970cee2d7afb81bdd762170481cd0069127d5b05aa993b4ea988d8fddc186ffb7dc90a6c08f4df435c934063199ffffffffffffffff","srp_versio":"1"}]
+2026-07-08 13:51:10.180 INFO  com.dukascopy.api.impl.connect.AuthorizationClient - Auth step 1 response [ServerResponseObject [passwordServerResponse=Step1ServerResponse [serverPublicValueB=4eb7bf39b02a3c352864b5012d67799d28fc31b9bfc78fa16d89194393c4e18801ea5cffcd74904d578ce04987ded050eb8f9f130f4066f96e3b53e85927ab19e961ad355ff25e4336ad0a5932b0360adb455eea01c51bb2dce25a24903bf3507956322119359d2ab898438946c66aa35ef78d735483de5ed0a4101766f1c38a166454afc8c1b6af24b132cd3de4cac0d44c90ccf11f9f772d5ef4003031a3701ad1ce4e997e212f1ad72a7ec83c285fe418fcb80e2a2bb27b8445d2caccfb104145550640ee29629dc361de08da94212c70e57f452f1bd73b018a9e3070de1d1a9a0f0d91bc27351064934d48ec93fe5b228fc1cbf6bdae2096efef0564411eb25b8cfe78143d91f7c22f6787162ff81ed0f7f3a1ed93e21d76a682c49ef4918cb3599e9fa66b90992261a4c6a23375c37cf73b7439a38d90542662d5e2365d1392275be25b0677861c4c0bfe9da842ae83f7bf43af7317b1779f2b48e5744de5ef0a9b216f8bbbc1419332946692a94b110292a8e386150e4fdd0aaa5cc314cc6af80d2a22b348f1455ff2f762435b2e4bd3ef4df886a655736a5f62e667ccd69799c06c9c6961be613bba9cf8ec701d9ddcfe606bcfae352ca8ede033d6b4e9a05c4bb7228db30c92dd0f9530826bf8ce08d3046dc74be21ad31e8b4e3ffefa357de0013ace8352303589b892a71934c09f3a97f2991a97fde0d2ccd65da0, saltS=27e92868f13889d655d41b1266b1b989, safePrimeN=ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca18217c32905e462e36ce3be39e772c180e86039b2783a2ec07a28fb5c55df06f4c52c9de2bcbf6955817183995497cea956ae515d2261898fa051015728e5a8aaac42dad33170d04507a33a85521abdf1cba64ecfb850458dbef0a8aea71575d060c7db3970f85a6e1e4c7abf5ae8cdb0933d71e8c94e04a25619dcee3d2261ad2ee6bf12ffa06d98a0864d87602733ec86a64521f2b18177b200cbbe117577a615d6c770988c0bad946e208e24fa074e5ab3143db5bfce0fd108e4b82d120a92108011a723c12a787e6d788719a10bdba5b2699c327186af4e23c1a946834b6150bda2583e9ca2ad44ce8dbbbc2db04de8ef92e8efc141fbecaa6287c59474e6bc05d99b2964fa090c3a2233ba186515be7ed1f612970cee2d7afb81bdd762170481cd0069127d5b05aa993b4ea988d8fddc186ffb7dc90a6c08f4df435c934063199ffffffffffffffff, correspondingGeneratorG=5, hashAlgorithmH=SHA-256, srpProtocolVersion=1], ]]
+2026-07-08 13:51:10.338 INFO  com.dukascopy.api.impl.connect.AuthorizationClient - Auth step 2 request A [594835876307792248723567948049838198609173824577688666194743948138299080951253835063990954763102352484043297306091145984678347729526891553539462733330968039855275931161972102293788136937581279531424925950611979608220384030951177835511745860779764789474433717103913244680976269186274411804999539397127718766415610743830783290862374090667885369042554326157924854809157907924023349321638508077376096267517483850402868002416400050114926072625710704302605961062741970285466544263020352793718869135575271613521850596853734608680214890657023216550596796525064567067433482875758655510759575745495688712766763714552434725496863343617849050409044003113398212463997749510958088007601095058949328221310991540119388361370878942962314312640710049226990426508531587571424386523346268488313343744370825209030408682257509938401626564512413512628291338007199588246095356456024777032306946956367820521745206356139034347022892703556248420219863266403704973429387966568883293533075053099857609648301544541135485300869299845148237597303382652155097449727055086177458732296071478562550928120416283458506141970761045926956295042639619057885758493189098380773890915358668575669165272203502325315919333344784858591792907860287621777286252900741462050768961670], M1 [12203373483812178957291646778987880334557388229681901768557898145850206686784]
+2026-07-08 13:51:10.338 DEBUG com.dukascopy.api.impl.connect.AuthorizationClient - >> [https://login.dukascopy.com/authorization-1/demo/auth?munus=srp_api&testimonium_nuntius=1afadd57da58e9928d11c01129cdb3a0a7acd24ea04686c96889724387a38e40&passus=2&publicus_pendo=91ce4aa9f470fd35c177bb4fcf3965fc74cb4bad1f97694a91665db885a3b4573677c83c74077a9960b3a309f211597a837c533dec14a1246a93d5ccedd5d271a73953c50619442448e51d4cdd0ed6ff8191eb1c81661d1a15c9b9732721478461aed5ebf259fa22298b0d5167ac15c4b908cdde7ea931831cf505cf55e4bb9d094db460a3659144cc8e1b7c0d24b77bccd78f25bdca09096f920365bf8a8645b3fba0480d514bf612221c862c98f5d016fff79187c73607b65788363640d801889ceacf7c9296f7b1e424ee0fbd6b4d1f59856e70227bc88f8f687200147dfdc7db7b114cbd76b6ea9818b7a23d607267156259fcb26f8b653cb20686d260d24f1147f3d5deb7d89d8075975dcbe6743f8363e838357bcf7ae10d8c3e61ab78b899e84d2afafc386a38494a796941081a7361a772a651a875d70c187c8776da70f4bdf6ffe333da41c6e2619ca9dbe18d4df2f59228fd7dace88c4171fd2df813c91ae2ba29e991f544ebfe6a3d427439df7cf4542f4ab63ff89e836a8475db75eff91f41c5be5d4bf93036a523561f1f4466331042b568d4e94e57afdf1ab52610fe7e564fccd0763840152f93a7e0a1cc405bfd5d4d40329205d4f9e142cee2617b3a6cba78f77f7c21833c2531652c1c47ea24aaa96b92e9da670d348e7af4dbe842316317e224e3e1b1f3347ec0193ba7164e3b3055ad927f376d944086&sermo=5cb287b6-153a-4866-8821-a0c134a56cec&putent_genus=0&obsecro_id=fa4882d1-b155-4c9f-b65f-70affea261ae&srp_versio=1]
+2026-07-08 13:51:10.690 DEBUG com.dukascopy.api.impl.connect.AuthorizationClient - << [{"M2":"270186262c29c0858f6cc3ab8b21549474d8cc11b75d32e0ce330e0829a89f1","srp_versio":"1"}]
+2026-07-08 13:51:10.691 INFO  com.dukascopy.api.impl.connect.AuthorizationClient - Auth step 2 response [ServerResponseObject [passwordServerResponse=Step2ServerResponse [serverEvidenceMessageM2=270186262c29c0858f6cc3ab8b21549474d8cc11b75d32e0ce330e0829a89f1, srpProtocolVersion=1], ]]
+2026-07-08 13:51:10.692 INFO  com.dukascopy.api.impl.connect.AuthorizationClient - Auth step 3 request
+2026-07-08 13:51:10.693 DEBUG com.dukascopy.api.impl.connect.AuthorizationClient - >> [https://login.dukascopy.com/authorization-1/demo/auth?munus=srp_api&passus=3&sermo=5cb287b6-153a-4866-8821-a0c134a56cec&versio=318.4.128&willPing=true&occasus_content_vulgate=0&putent_genus=0&occasus=true&platform=DDS3_JFOREXSDK&obsecro_id=fa4882d1-b155-4c9f-b65f-70affea261ae&srp_versio=1]
+2026-07-08 13:51:11.725 DEBUG com.dukascopy.api.impl.connect.AuthorizationClient - << [{"readOnly":false,"occasus":"rO0ABXNyABRqYXZhLnV0aWwuUHJvcGVydGllczkS0HpwNj6YAgABTAAIZGVmYXVsdHN0ABZMamF2\r\nYS91dGlsL1Byb3BlcnRpZX...","authApiURLs":["d-ja-gva-121-135-154.66proxymity88.net:10443","d-ja-usa-e-97-4-b.66proxymity88.net:10443","d-ja-sgn-30-b.66proxymity88.net:10443","d-ja-jpn-04-a.66proxymity88.net:10443","d-ja-eu-zrh-66-12.66proxymity88.net:10443"],"srp_versio":"1"}]
+2026-07-08 13:51:11.769 INFO  com.dukascopy.api.impl.connect.AuthorizationClient - Auth step 3 response [ServerResponseObject [passwordServerResponse=Step3ServerResponse [serverResponse={"readOnly":false,"occasus":"rO0ABXNyABRqYXZhLnV0aWwuUHJvcGVydGllczkS0HpwNj6YAgABTAAIZGVmYXVsdHN0ABZMamF2\r\nYS91dGlsL1Byb3BlcnRpZX...","authApiURLs":["d-ja-gva-121-135-154.66proxymity88.net:10443","d-ja-usa-e-97-4-b.66proxymity88.net:10443","d-ja-sgn-30-b.66proxymity88.net:10443","d-ja-jpn-04-a.66proxymity88.net:10443","d-ja-eu-zrh-66-12.66proxymity88.net:10443"],"srp_versio":"1"}], responseHeaderFields={null=[HTTP/1.1 200 OK], Transfer-Encoding=[chunked], Server=[cloudflare], CF-RAY=[a17f8febd9ddd77e-LHR], Connection=[keep-alive], Cf-Cache-Status=[DYNAMIC], Last-Modified=[Wed, 08 Jul 2026 13:51:10 GMT], Pragma=[no-cache], Client-Country=[GB], X-Duk-Bes=[x], Date=[Wed, 08 Jul 2026 13:51:11 GMT], X-Duk-Fes=[EH0], Strict-Transport-Security=[max-age=63072000; includeSubDomains], Cache-Control=[no-cache, must-revalidate, no-store, max-age=0], Access-Control-Allow-Credentials=[true], Idle-Session-Ttl=[900000], Client-Ip=[78.141.203.203], Vary=[accept-encoding], Expires=[Thu, 01 Jan 1970 00:00:00 GMT], Content-Type=[text/plain;charset=UTF-8]}]]
+2026-07-08 13:51:11.892 ERROR com.dukascopy.api.instrument.Instrumentarium - Received pip value is different than predefined for instrument [EUR/THB]
+2026-07-08 13:51:11.930 INFO  com.dukascopy.api.impl.connect.AuthorizationClient - APIC: Ping API server URLs synchronously
+2026-07-08 13:51:11.931 INFO  com.dukascopy.api.impl.connect.PingHelper - Selecting the best server...
+2026-07-08 13:51:11.944 INFO  com.dukascopy.api.impl.connect.PingHelper - The ping start time=2026-07-08 13:51:11:944
+2026-07-08 13:51:12.188 INFO  com.dukascopy.api.impl.connect.PingHelper - The ping end time=2026-07-08 13:51:12:188, the ping processing time=[244]ms
+2026-07-08 13:51:12.188 DEBUG com.dukascopy.api.impl.connect.PingHelper - Best api url [d-ja-gva-121-135-154.66proxymity88.net:10443] with time [19]
+2026-07-08 13:51:12.189 INFO  com.dukascopy.dds2.greed.ping.ApiServerManager - APIC: The ping is finished, the fastest API server is saved: d-ja-gva-121-135-154.66proxymity88.net:10443 (19 ms)
+2026-07-08 13:51:12.189 DEBUG com.dukascopy.api.impl.connect.DCClientImpl - d-ja-gva-121-135-154.66proxymity88.net:10443@8b022a0ea06662d9ac70b1d42a82a206be9b9cdccba37822f86163045d6ebc90
+2026-07-08 13:51:12.189 WARN  com.dukascopy.api.impl.connect.DCClientImpl - Layout Types list was not found
+2026-07-08 13:51:12.190 DEBUG com.dukascopy.api.impl.connect.DCClientImpl - UserAgent: {"clientType":"DDS3_JFOREXSDK","javaVersion":"21.0.11","jvmVersion":"21.0.11+10-1-24.04.2-Ubuntu","clientVersion":"318.4.128","osName":"Linux"}
+2026-07-08 13:51:12.572 INFO  com.dukascopy.dds2.greed.util.FilePathManager - WL info is unavailable. Use default App folder for Platform data:  /root/JForex
+2026-07-08 13:51:12.736 INFO  com.dukascopy.api.instrument.subscribe.InstrumentManager - InstrumentManager created.
+2026-07-08 13:51:12.883 WARN  com.dukascopy.api.impl.connect.WLabelData - White Label Image is not received
+2026-07-08 13:51:12.985 INFO  com.dukascopy.dds2.greed.connection.GreedClientAuthorizationProvider - !!!:Thread[#47,(DDS2 Standalone Transport Client) ClientConnector,5,com.rws.dukas.JForex4ArchiveAuditor]
+2026-07-08 13:51:12.985 INFO  com.dukascopy.dds4.transport.client.netty.ClientConnector - Authorize task in queue, server address [d-ja-gva-121-135-154.66proxymity88.net/194.8.15.154:10443], transport name [DDS2 Standalone Transport Client]
+2026-07-08 13:51:13.036 INFO  com.dukascopy.dds2.greed.market.LiveCurrencyMarketManager - LiveCurrencyMarketManager started.
+2026-07-08 13:51:13.036 INFO  com.dukascopy.api.impl.connect.DCClientImpl - Connected
+2026-07-08 13:51:13.940 INFO  com.dukascopy.api.instrument.subscribe.InstrumentManager - SUBSCRIBED INSTRUMENTS: [EUR/USD]
+2026-07-08 13:51:13.942 INFO  com.dukascopy.api.instrument.subscribe.InstrumentManager - FULL DEPTH INSTRUMENTS: [EUR/USD]
+2026-07-08 13:51:14.096 INFO  com.dukascopy.dds4.transport.client.netty.TransportClient - Ticks are being transferred via UDP
+2026-07-08 13:51:15.929 INFO  com.dukascopy.api.impl.connect.DCClientImpl - Strategy started: 56
+2026-07-08 13:51:22.617 DEBUG com.dukascopy.api.impl.connect.ActivityLogger - jah : [{"datumType":"message","message":"Strategy \"HistoryHolderStrategy\" Strategy ID: 83F0D797AC83478801D7C469A5A5B2BA is started at 2026-07-08 13:51:15.907 GMT on the local computer with no parameters","clientTime":"1783518675929","timestamp":"1783518675907"}]
+2026-07-08 13:51:22.878 DEBUG com.dukascopy.api.impl.connect.ActivityLogger - Trade Log (200) : https://demo-login.dukascopy.com?check=fffdfffdfffd1e573ffffd336b5bfffd20390e673f&login=DEMO2YciXg&tzOffsetSeconds=0
+2026-07-08 13:54:54.361 WARN  com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler - Read timed out
+java.net.SocketTimeoutException: Read timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278)
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:489)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:483)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1460)
+	at java.base/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1066)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:291)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:347)
+	at java.base/java.io.BufferedInputStream.implRead(BufferedInputStream.java:420)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:399)
+	at java.base/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:827)
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:759)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1720)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:319)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadFileFromCFG(CurvesJsonProtocolHandler.java:256)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadAndDecompressFileFromCFG(CurvesJsonProtocolHandler.java:361)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadChunkFileFromCFG(CurvesJsonProtocolHandler.java:495)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.lambda$loadDataFromCFG$2(CurvesDataLoader.java:1642)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.performLoad(CurvesDataLoader.java:2004)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadDataFromCFG(CurvesDataLoader.java:1637)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadChunkData(CurvesDataLoader.java:1562)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:408)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:161)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.lambda$run$0(LoadDataAction.java:323)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.run(LoadDataAction.java:338)
+	at com.dukascopy.charts.data.datacache.FeedDataProvider.loadTicksDataSynched(FeedDataProvider.java:1419)
+	at com.dukascopy.api.impl.HistoryData.getTicksSecured(HistoryData.java:98)
+	at com.dukascopy.api.impl.History.lambda$getTicks$4(History.java:444)
+	at com.dukascopy.api.impl.History.lambda$doPrivileged$116(History.java:3573)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.api.impl.History.doPrivileged(History.java:3573)
+	at com.dukascopy.api.impl.History.getTicks(History.java:442)
+	at com.rws.dukas.JForex4ArchiveAuditor.processMonthWithRetry(JForex4ArchiveAuditor.java:338)
+	at com.rws.dukas.JForex4ArchiveAuditor.main(JForex4ArchiveAuditor.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-07-08 13:54:54.365 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 00:00:00:000], chunk to [2012-10-22 01:00:00:000]
+2026-07-08 13:54:54.366 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 01:00:00:000], chunk to [2012-10-22 02:00:00:000]
+2026-07-08 13:54:54.366 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 02:00:00:000], chunk to [2012-10-22 03:00:00:000]
+2026-07-08 13:54:54.366 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 03:00:00:000], chunk to [2012-10-22 04:00:00:000]
+2026-07-08 13:54:54.366 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 04:00:00:000], chunk to [2012-10-22 05:00:00:000]
+2026-07-08 13:54:54.368 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 05:00:00:000], chunk to [2012-10-22 06:00:00:000]
+2026-07-08 13:54:54.368 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 06:00:00:000], chunk to [2012-10-22 07:00:00:000]
+2026-07-08 13:54:54.368 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 07:00:00:000], chunk to [2012-10-22 08:00:00:000]
+2026-07-08 13:54:54.368 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 08:00:00:000], chunk to [2012-10-22 09:00:00:000]
+2026-07-08 13:54:54.368 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 09:00:00:000], chunk to [2012-10-22 10:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 10:00:00:000], chunk to [2012-10-22 11:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 11:00:00:000], chunk to [2012-10-22 12:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 12:00:00:000], chunk to [2012-10-22 13:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 13:00:00:000], chunk to [2012-10-22 14:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 14:00:00:000], chunk to [2012-10-22 15:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 15:00:00:000], chunk to [2012-10-22 16:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 16:00:00:000], chunk to [2012-10-22 17:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 17:00:00:000], chunk to [2012-10-22 18:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 18:00:00:000], chunk to [2012-10-22 19:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 19:00:00:000], chunk to [2012-10-22 20:00:00:000]
+2026-07-08 13:54:54.369 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 20:00:00:000], chunk to [2012-10-22 21:00:00:000]
+2026-07-08 13:54:54.370 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 21:00:00:000], chunk to [2012-10-22 22:00:00:000]
+2026-07-08 13:54:54.370 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 22:00:00:000], chunk to [2012-10-22 23:00:00:000]
+2026-07-08 13:54:54.370 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-22 23:00:00:000], chunk to [2012-10-23 00:00:00:000]
+2026-07-08 13:55:39.458 WARN  com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler - Read timed out
+java.net.SocketTimeoutException: Read timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278)
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:489)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:483)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1460)
+	at java.base/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1066)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:291)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:347)
+	at java.base/java.io.BufferedInputStream.implRead(BufferedInputStream.java:420)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:399)
+	at java.base/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:827)
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:759)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1720)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:319)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadFileFromCFG(CurvesJsonProtocolHandler.java:256)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadAndDecompressFileFromCFG(CurvesJsonProtocolHandler.java:361)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadChunkFileFromCFG(CurvesJsonProtocolHandler.java:495)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.lambda$loadDataFromCFG$2(CurvesDataLoader.java:1642)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.performLoad(CurvesDataLoader.java:2004)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadDataFromCFG(CurvesDataLoader.java:1637)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadChunkData(CurvesDataLoader.java:1562)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:408)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:161)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.lambda$run$0(LoadDataAction.java:323)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.run(LoadDataAction.java:338)
+	at com.dukascopy.charts.data.datacache.FeedDataProvider.loadTicksDataSynched(FeedDataProvider.java:1419)
+	at com.dukascopy.api.impl.HistoryData.getTicksSecured(HistoryData.java:98)
+	at com.dukascopy.api.impl.History.lambda$getTicks$4(History.java:444)
+	at com.dukascopy.api.impl.History.lambda$doPrivileged$116(History.java:3573)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.api.impl.History.doPrivileged(History.java:3573)
+	at com.dukascopy.api.impl.History.getTicks(History.java:442)
+	at com.rws.dukas.JForex4ArchiveAuditor.processMonthWithRetry(JForex4ArchiveAuditor.java:338)
+	at com.rws.dukas.JForex4ArchiveAuditor.main(JForex4ArchiveAuditor.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-07-08 13:55:39.459 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 00:00:00:000], chunk to [2012-10-23 01:00:00:000]
+2026-07-08 13:55:39.459 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 01:00:00:000], chunk to [2012-10-23 02:00:00:000]
+2026-07-08 13:55:39.459 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 02:00:00:000], chunk to [2012-10-23 03:00:00:000]
+2026-07-08 13:55:39.459 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 03:00:00:000], chunk to [2012-10-23 04:00:00:000]
+2026-07-08 13:55:39.459 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 04:00:00:000], chunk to [2012-10-23 05:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 05:00:00:000], chunk to [2012-10-23 06:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 06:00:00:000], chunk to [2012-10-23 07:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 07:00:00:000], chunk to [2012-10-23 08:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 08:00:00:000], chunk to [2012-10-23 09:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 09:00:00:000], chunk to [2012-10-23 10:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 10:00:00:000], chunk to [2012-10-23 11:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 11:00:00:000], chunk to [2012-10-23 12:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 12:00:00:000], chunk to [2012-10-23 13:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 13:00:00:000], chunk to [2012-10-23 14:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 14:00:00:000], chunk to [2012-10-23 15:00:00:000]
+2026-07-08 13:55:39.460 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 15:00:00:000], chunk to [2012-10-23 16:00:00:000]
+2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 16:00:00:000], chunk to [2012-10-23 17:00:00:000]
+2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 17:00:00:000], chunk to [2012-10-23 18:00:00:000]
+2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 18:00:00:000], chunk to [2012-10-23 19:00:00:000]
+2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 19:00:00:000], chunk to [2012-10-23 20:00:00:000]
+2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 20:00:00:000], chunk to [2012-10-23 21:00:00:000]
+2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 21:00:00:000], chunk to [2012-10-23 22:00:00:000]
+2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 22:00:00:000], chunk to [2012-10-23 23:00:00:000]
+2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 23:00:00:000], chunk to [2012-10-24 00:00:00:000]
+2026-07-08 14:01:12.708 DEBUG com.dukascopy.api.impl.connect.DCClientImpl - Unrecognized protocol message : class com.dukascopy.dds4.transport.msg.system.SystemTimeResponseMessage / <SystemTimeResponseMessage(requestTime=1783519272688,time=1783519272700,transportLagInterval=0,synchRequestId=83,timestamp=1783519272700)>

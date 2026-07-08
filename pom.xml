@@ -24,10 +24,18 @@
     </repositories>
 
     <dependencies>
+        <!-- REQUIRED: JForex Client (contains IClient, TesterFactory, etc.) -->
         <dependency>
             <groupId>com.dukascopy.dds2</groupId>
             <artifactId>DDS2-jClient-JForex</artifactId>
             <version>3.6.51</version>
+        </dependency>
+
+        <!-- REQUIRED: JForex API (contains IHistory, ITick, IStrategy, getTicks, etc.) -->
+        <dependency>
+            <groupId>com.dukascopy.api</groupId>
+            <artifactId>JForex-API</artifactId>
+            <version>2.13.99</version>
         </dependency>
     </dependencies>
 
@@ -51,7 +59,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.rws.dukas.DukascopyHistoricalDownloader</mainClass>
+                                    <mainClass>com.rws.dukas.JForex4Downloader</mainClass>
                                 </transformer>
                             </transformers>
                             <createDependencyReducedPom>false</createDependencyReducedPom>

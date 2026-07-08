@@ -1,6 +1,9 @@
-com/rws/dukas/DukascopyHistoricalDownloader$BarData.class
-com/rws/dukas/DukascopyHistoricalDownloader.class
+com/rws/dukas/JForex4ArchiveAuditor$HistoryHolderStrategy.class
 singlejartest/MA_Play.class
-com/rws/dukas/DukascopyHistoricalDownloader$DailyChunkStrategy.class
+com/rws/dukas/JForex4Downloader$MinuteBar.class
 singlejartest/Main.class
 singlejartest/Main$1.class
+com/rws/dukas/JForex4Downloader$HistoryHolderStrategy.class
+com/rws/dukas/JForex4ArchiveAuditor$MinuteBar.class
+com/rws/dukas/JForex4Downloader.class
+com/rws/dukas/JForex4ArchiveAuditor.class
