@@ -187,3 +187,533 @@ java.net.SocketTimeoutException: Read timed out
 2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 22:00:00:000], chunk to [2012-10-23 23:00:00:000]
 2026-07-08 13:55:39.461 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2012-10-23 23:00:00:000], chunk to [2012-10-24 00:00:00:000]
 2026-07-08 14:01:12.708 DEBUG com.dukascopy.api.impl.connect.DCClientImpl - Unrecognized protocol message : class com.dukascopy.dds4.transport.msg.system.SystemTimeResponseMessage / <SystemTimeResponseMessage(requestTime=1783519272688,time=1783519272700,transportLagInterval=0,synchRequestId=83,timestamp=1783519272700)>
+2026-07-08 14:02:32.590 WARN  com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler - Read timed out
+java.net.SocketTimeoutException: Read timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278)
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:489)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:483)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1460)
+	at java.base/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1066)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:291)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:347)
+	at java.base/java.io.BufferedInputStream.implRead(BufferedInputStream.java:420)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:399)
+	at java.base/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:827)
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:759)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1720)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:319)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadFileFromCFG(CurvesJsonProtocolHandler.java:256)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadAndDecompressFileFromCFG(CurvesJsonProtocolHandler.java:361)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadChunkFileFromCFG(CurvesJsonProtocolHandler.java:495)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.lambda$loadDataFromCFG$2(CurvesDataLoader.java:1642)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.performLoad(CurvesDataLoader.java:2004)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadDataFromCFG(CurvesDataLoader.java:1637)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadChunkData(CurvesDataLoader.java:1562)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:408)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:161)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.lambda$run$0(LoadDataAction.java:323)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.run(LoadDataAction.java:338)
+	at com.dukascopy.charts.data.datacache.FeedDataProvider.loadTicksDataSynched(FeedDataProvider.java:1419)
+	at com.dukascopy.api.impl.HistoryData.getTicksSecured(HistoryData.java:98)
+	at com.dukascopy.api.impl.History.lambda$getTicks$4(History.java:444)
+	at com.dukascopy.api.impl.History.lambda$doPrivileged$116(History.java:3573)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.api.impl.History.doPrivileged(History.java:3573)
+	at com.dukascopy.api.impl.History.getTicks(History.java:442)
+	at com.rws.dukas.JForex4ArchiveAuditor.processMonthWithRetry(JForex4ArchiveAuditor.java:338)
+	at com.rws.dukas.JForex4ArchiveAuditor.main(JForex4ArchiveAuditor.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-07-08 14:02:32.591 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 00:00:00:000], chunk to [2015-07-21 01:00:00:000]
+2026-07-08 14:02:32.591 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 01:00:00:000], chunk to [2015-07-21 02:00:00:000]
+2026-07-08 14:02:32.591 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 02:00:00:000], chunk to [2015-07-21 03:00:00:000]
+2026-07-08 14:02:32.591 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 03:00:00:000], chunk to [2015-07-21 04:00:00:000]
+2026-07-08 14:02:32.591 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 04:00:00:000], chunk to [2015-07-21 05:00:00:000]
+2026-07-08 14:02:32.591 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 05:00:00:000], chunk to [2015-07-21 06:00:00:000]
+2026-07-08 14:02:32.591 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 06:00:00:000], chunk to [2015-07-21 07:00:00:000]
+2026-07-08 14:02:32.591 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 07:00:00:000], chunk to [2015-07-21 08:00:00:000]
+2026-07-08 14:02:32.591 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 08:00:00:000], chunk to [2015-07-21 09:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 09:00:00:000], chunk to [2015-07-21 10:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 10:00:00:000], chunk to [2015-07-21 11:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 11:00:00:000], chunk to [2015-07-21 12:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 12:00:00:000], chunk to [2015-07-21 13:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 13:00:00:000], chunk to [2015-07-21 14:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 14:00:00:000], chunk to [2015-07-21 15:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 15:00:00:000], chunk to [2015-07-21 16:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 16:00:00:000], chunk to [2015-07-21 17:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 17:00:00:000], chunk to [2015-07-21 18:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 18:00:00:000], chunk to [2015-07-21 19:00:00:000]
+2026-07-08 14:02:32.592 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 19:00:00:000], chunk to [2015-07-21 20:00:00:000]
+2026-07-08 14:02:32.593 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 20:00:00:000], chunk to [2015-07-21 21:00:00:000]
+2026-07-08 14:02:32.593 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 21:00:00:000], chunk to [2015-07-21 22:00:00:000]
+2026-07-08 14:02:32.593 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 22:00:00:000], chunk to [2015-07-21 23:00:00:000]
+2026-07-08 14:02:32.593 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-21 23:00:00:000], chunk to [2015-07-22 00:00:00:000]
+2026-07-08 14:03:17.703 WARN  com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler - Read timed out
+java.net.SocketTimeoutException: Read timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278)
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:489)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:483)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1460)
+	at java.base/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1066)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:291)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:347)
+	at java.base/java.io.BufferedInputStream.implRead(BufferedInputStream.java:420)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:399)
+	at java.base/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:827)
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:759)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1720)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:319)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadFileFromCFG(CurvesJsonProtocolHandler.java:256)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadAndDecompressFileFromCFG(CurvesJsonProtocolHandler.java:361)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadChunkFileFromCFG(CurvesJsonProtocolHandler.java:495)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.lambda$loadDataFromCFG$2(CurvesDataLoader.java:1642)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.performLoad(CurvesDataLoader.java:2004)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadDataFromCFG(CurvesDataLoader.java:1637)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadChunkData(CurvesDataLoader.java:1562)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:408)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:161)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.lambda$run$0(LoadDataAction.java:323)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.run(LoadDataAction.java:338)
+	at com.dukascopy.charts.data.datacache.FeedDataProvider.loadTicksDataSynched(FeedDataProvider.java:1419)
+	at com.dukascopy.api.impl.HistoryData.getTicksSecured(HistoryData.java:98)
+	at com.dukascopy.api.impl.History.lambda$getTicks$4(History.java:444)
+	at com.dukascopy.api.impl.History.lambda$doPrivileged$116(History.java:3573)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.api.impl.History.doPrivileged(History.java:3573)
+	at com.dukascopy.api.impl.History.getTicks(History.java:442)
+	at com.rws.dukas.JForex4ArchiveAuditor.processMonthWithRetry(JForex4ArchiveAuditor.java:338)
+	at com.rws.dukas.JForex4ArchiveAuditor.main(JForex4ArchiveAuditor.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-07-08 14:03:17.704 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 00:00:00:000], chunk to [2015-07-22 01:00:00:000]
+2026-07-08 14:03:17.704 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 01:00:00:000], chunk to [2015-07-22 02:00:00:000]
+2026-07-08 14:03:17.704 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 02:00:00:000], chunk to [2015-07-22 03:00:00:000]
+2026-07-08 14:03:17.704 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 03:00:00:000], chunk to [2015-07-22 04:00:00:000]
+2026-07-08 14:03:17.704 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 04:00:00:000], chunk to [2015-07-22 05:00:00:000]
+2026-07-08 14:03:17.704 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 05:00:00:000], chunk to [2015-07-22 06:00:00:000]
+2026-07-08 14:03:17.704 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 06:00:00:000], chunk to [2015-07-22 07:00:00:000]
+2026-07-08 14:03:17.704 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 07:00:00:000], chunk to [2015-07-22 08:00:00:000]
+2026-07-08 14:03:17.704 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 08:00:00:000], chunk to [2015-07-22 09:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 09:00:00:000], chunk to [2015-07-22 10:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 10:00:00:000], chunk to [2015-07-22 11:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 11:00:00:000], chunk to [2015-07-22 12:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 12:00:00:000], chunk to [2015-07-22 13:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 13:00:00:000], chunk to [2015-07-22 14:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 14:00:00:000], chunk to [2015-07-22 15:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 15:00:00:000], chunk to [2015-07-22 16:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 16:00:00:000], chunk to [2015-07-22 17:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 17:00:00:000], chunk to [2015-07-22 18:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 18:00:00:000], chunk to [2015-07-22 19:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 19:00:00:000], chunk to [2015-07-22 20:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 20:00:00:000], chunk to [2015-07-22 21:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 21:00:00:000], chunk to [2015-07-22 22:00:00:000]
+2026-07-08 14:03:17.705 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 22:00:00:000], chunk to [2015-07-22 23:00:00:000]
+2026-07-08 14:03:17.706 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-22 23:00:00:000], chunk to [2015-07-23 00:00:00:000]
+2026-07-08 14:03:24.695 ERROR com.dukascopy.dds4.transport.client.netty.ClientConnector - UDP session ping failed, address d-ja-gva-121-135-154.66proxymity88.net/194.8.15.154:10443, reason java.util.concurrent.TimeoutException: [DDS2 Standalone Transport Client] Timeout while waiting for response, timeout: 10000, synchRequestId: 101
+2026-07-08 14:04:02.792 WARN  com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler - Read timed out
+java.net.SocketTimeoutException: Read timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278)
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:489)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:483)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1460)
+	at java.base/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1066)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:291)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:347)
+	at java.base/java.io.BufferedInputStream.implRead(BufferedInputStream.java:420)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:399)
+	at java.base/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:827)
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:759)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1720)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:319)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadFileFromCFG(CurvesJsonProtocolHandler.java:256)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadAndDecompressFileFromCFG(CurvesJsonProtocolHandler.java:361)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadChunkFileFromCFG(CurvesJsonProtocolHandler.java:495)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.lambda$loadDataFromCFG$2(CurvesDataLoader.java:1642)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.performLoad(CurvesDataLoader.java:2004)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadDataFromCFG(CurvesDataLoader.java:1637)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadChunkData(CurvesDataLoader.java:1562)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:408)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:161)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.lambda$run$0(LoadDataAction.java:323)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.run(LoadDataAction.java:338)
+	at com.dukascopy.charts.data.datacache.FeedDataProvider.loadTicksDataSynched(FeedDataProvider.java:1419)
+	at com.dukascopy.api.impl.HistoryData.getTicksSecured(HistoryData.java:98)
+	at com.dukascopy.api.impl.History.lambda$getTicks$4(History.java:444)
+	at com.dukascopy.api.impl.History.lambda$doPrivileged$116(History.java:3573)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.api.impl.History.doPrivileged(History.java:3573)
+	at com.dukascopy.api.impl.History.getTicks(History.java:442)
+	at com.rws.dukas.JForex4ArchiveAuditor.processMonthWithRetry(JForex4ArchiveAuditor.java:338)
+	at com.rws.dukas.JForex4ArchiveAuditor.main(JForex4ArchiveAuditor.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-07-08 14:04:02.793 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 00:00:00:000], chunk to [2015-07-23 01:00:00:000]
+2026-07-08 14:04:02.793 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 01:00:00:000], chunk to [2015-07-23 02:00:00:000]
+2026-07-08 14:04:02.793 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 02:00:00:000], chunk to [2015-07-23 03:00:00:000]
+2026-07-08 14:04:02.793 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 03:00:00:000], chunk to [2015-07-23 04:00:00:000]
+2026-07-08 14:04:02.793 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 04:00:00:000], chunk to [2015-07-23 05:00:00:000]
+2026-07-08 14:04:02.793 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 05:00:00:000], chunk to [2015-07-23 06:00:00:000]
+2026-07-08 14:04:02.794 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 06:00:00:000], chunk to [2015-07-23 07:00:00:000]
+2026-07-08 14:04:02.794 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 07:00:00:000], chunk to [2015-07-23 08:00:00:000]
+2026-07-08 14:04:02.794 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 08:00:00:000], chunk to [2015-07-23 09:00:00:000]
+2026-07-08 14:04:02.794 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 09:00:00:000], chunk to [2015-07-23 10:00:00:000]
+2026-07-08 14:04:02.794 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 10:00:00:000], chunk to [2015-07-23 11:00:00:000]
+2026-07-08 14:04:02.794 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 11:00:00:000], chunk to [2015-07-23 12:00:00:000]
+2026-07-08 14:04:02.794 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 12:00:00:000], chunk to [2015-07-23 13:00:00:000]
+2026-07-08 14:04:02.795 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 13:00:00:000], chunk to [2015-07-23 14:00:00:000]
+2026-07-08 14:04:02.795 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 14:00:00:000], chunk to [2015-07-23 15:00:00:000]
+2026-07-08 14:04:02.795 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 15:00:00:000], chunk to [2015-07-23 16:00:00:000]
+2026-07-08 14:04:02.795 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 16:00:00:000], chunk to [2015-07-23 17:00:00:000]
+2026-07-08 14:04:02.795 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 17:00:00:000], chunk to [2015-07-23 18:00:00:000]
+2026-07-08 14:04:02.795 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 18:00:00:000], chunk to [2015-07-23 19:00:00:000]
+2026-07-08 14:04:02.795 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 19:00:00:000], chunk to [2015-07-23 20:00:00:000]
+2026-07-08 14:04:02.796 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 20:00:00:000], chunk to [2015-07-23 21:00:00:000]
+2026-07-08 14:04:02.796 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 21:00:00:000], chunk to [2015-07-23 22:00:00:000]
+2026-07-08 14:04:02.796 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 22:00:00:000], chunk to [2015-07-23 23:00:00:000]
+2026-07-08 14:04:02.796 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-23 23:00:00:000], chunk to [2015-07-24 00:00:00:000]
+2026-07-08 14:04:50.058 WARN  com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler - Read timed out
+java.net.SocketTimeoutException: Read timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278)
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:489)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:483)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1460)
+	at java.base/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1066)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:291)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:347)
+	at java.base/java.io.BufferedInputStream.implRead(BufferedInputStream.java:420)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:399)
+	at java.base/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:827)
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:759)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1720)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:319)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadFileFromCFG(CurvesJsonProtocolHandler.java:256)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadAndDecompressFileFromCFG(CurvesJsonProtocolHandler.java:361)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadChunkFileFromCFG(CurvesJsonProtocolHandler.java:495)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.lambda$loadDataFromCFG$2(CurvesDataLoader.java:1642)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.performLoad(CurvesDataLoader.java:2004)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadDataFromCFG(CurvesDataLoader.java:1637)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadChunkData(CurvesDataLoader.java:1562)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:408)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:161)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.lambda$run$0(LoadDataAction.java:323)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.run(LoadDataAction.java:338)
+	at com.dukascopy.charts.data.datacache.FeedDataProvider.loadTicksDataSynched(FeedDataProvider.java:1419)
+	at com.dukascopy.api.impl.HistoryData.getTicksSecured(HistoryData.java:98)
+	at com.dukascopy.api.impl.History.lambda$getTicks$4(History.java:444)
+	at com.dukascopy.api.impl.History.lambda$doPrivileged$116(History.java:3573)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.api.impl.History.doPrivileged(History.java:3573)
+	at com.dukascopy.api.impl.History.getTicks(History.java:442)
+	at com.rws.dukas.JForex4ArchiveAuditor.processMonthWithRetry(JForex4ArchiveAuditor.java:338)
+	at com.rws.dukas.JForex4ArchiveAuditor.main(JForex4ArchiveAuditor.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 00:00:00:000], chunk to [2015-07-24 01:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 01:00:00:000], chunk to [2015-07-24 02:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 02:00:00:000], chunk to [2015-07-24 03:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 03:00:00:000], chunk to [2015-07-24 04:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 04:00:00:000], chunk to [2015-07-24 05:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 05:00:00:000], chunk to [2015-07-24 06:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 06:00:00:000], chunk to [2015-07-24 07:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 07:00:00:000], chunk to [2015-07-24 08:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 08:00:00:000], chunk to [2015-07-24 09:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 09:00:00:000], chunk to [2015-07-24 10:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 10:00:00:000], chunk to [2015-07-24 11:00:00:000]
+2026-07-08 14:04:50.059 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 11:00:00:000], chunk to [2015-07-24 12:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 12:00:00:000], chunk to [2015-07-24 13:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 13:00:00:000], chunk to [2015-07-24 14:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 14:00:00:000], chunk to [2015-07-24 15:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 15:00:00:000], chunk to [2015-07-24 16:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 16:00:00:000], chunk to [2015-07-24 17:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 17:00:00:000], chunk to [2015-07-24 18:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 18:00:00:000], chunk to [2015-07-24 19:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 19:00:00:000], chunk to [2015-07-24 20:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 20:00:00:000], chunk to [2015-07-24 21:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 21:00:00:000], chunk to [2015-07-24 22:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 22:00:00:000], chunk to [2015-07-24 23:00:00:000]
+2026-07-08 14:04:50.060 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2015-07-24 23:00:00:000], chunk to [2015-07-25 00:00:00:000]
+2026-07-08 14:06:17.388 WARN  com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler - Server returned HTTP response code: 503 for URL: https://datafeed.66proxymity88.net/EURUSD/2016/01/10_ticks.bi5
+java.io.IOException: Server returned HTTP response code: 503 for URL: https://datafeed.66proxymity88.net/EURUSD/2016/01/10_ticks.bi5
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection$10.run(HttpURLConnection.java:2085)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection$10.run(HttpURLConnection.java:2080)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getChainedException(HttpURLConnection.java:2079)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1649)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:223)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:331)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadFileFromCFG(CurvesJsonProtocolHandler.java:256)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadAndDecompressFileFromCFG(CurvesJsonProtocolHandler.java:361)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadChunkFileFromCFG(CurvesJsonProtocolHandler.java:495)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.lambda$loadDataFromCFG$2(CurvesDataLoader.java:1642)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.performLoad(CurvesDataLoader.java:2004)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadDataFromCFG(CurvesDataLoader.java:1637)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadChunkData(CurvesDataLoader.java:1562)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:408)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:161)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.lambda$run$0(LoadDataAction.java:323)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.run(LoadDataAction.java:338)
+	at com.dukascopy.charts.data.datacache.FeedDataProvider.loadTicksDataSynched(FeedDataProvider.java:1419)
+	at com.dukascopy.api.impl.HistoryData.getTicksSecured(HistoryData.java:98)
+	at com.dukascopy.api.impl.History.lambda$getTicks$4(History.java:444)
+	at com.dukascopy.api.impl.History.lambda$doPrivileged$116(History.java:3573)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.api.impl.History.doPrivileged(History.java:3573)
+	at com.dukascopy.api.impl.History.getTicks(History.java:442)
+	at com.rws.dukas.JForex4ArchiveAuditor.processMonthWithRetry(JForex4ArchiveAuditor.java:338)
+	at com.rws.dukas.JForex4ArchiveAuditor.main(JForex4ArchiveAuditor.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.io.IOException: Server returned HTTP response code: 503 for URL: https://datafeed.66proxymity88.net/EURUSD/2016/01/10_ticks.bi5
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:2028)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:319)
+	... 29 more
+2026-07-08 14:06:17.388 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 00:00:00:000], chunk to [2016-02-10 01:00:00:000]
+2026-07-08 14:06:17.388 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 01:00:00:000], chunk to [2016-02-10 02:00:00:000]
+2026-07-08 14:06:17.388 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 02:00:00:000], chunk to [2016-02-10 03:00:00:000]
+2026-07-08 14:06:17.388 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 03:00:00:000], chunk to [2016-02-10 04:00:00:000]
+2026-07-08 14:06:17.388 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 04:00:00:000], chunk to [2016-02-10 05:00:00:000]
+2026-07-08 14:06:17.388 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 05:00:00:000], chunk to [2016-02-10 06:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 06:00:00:000], chunk to [2016-02-10 07:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 07:00:00:000], chunk to [2016-02-10 08:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 08:00:00:000], chunk to [2016-02-10 09:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 09:00:00:000], chunk to [2016-02-10 10:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 10:00:00:000], chunk to [2016-02-10 11:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 11:00:00:000], chunk to [2016-02-10 12:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 12:00:00:000], chunk to [2016-02-10 13:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 13:00:00:000], chunk to [2016-02-10 14:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 14:00:00:000], chunk to [2016-02-10 15:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 15:00:00:000], chunk to [2016-02-10 16:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 16:00:00:000], chunk to [2016-02-10 17:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 17:00:00:000], chunk to [2016-02-10 18:00:00:000]
+2026-07-08 14:06:17.389 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 18:00:00:000], chunk to [2016-02-10 19:00:00:000]
+2026-07-08 14:06:17.390 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 19:00:00:000], chunk to [2016-02-10 20:00:00:000]
+2026-07-08 14:06:17.390 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 20:00:00:000], chunk to [2016-02-10 21:00:00:000]
+2026-07-08 14:06:17.390 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 21:00:00:000], chunk to [2016-02-10 22:00:00:000]
+2026-07-08 14:06:17.390 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 22:00:00:000], chunk to [2016-02-10 23:00:00:000]
+2026-07-08 14:06:17.390 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-10 23:00:00:000], chunk to [2016-02-11 00:00:00:000]
+2026-07-08 14:07:03.575 WARN  com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler - Read timed out
+java.net.SocketTimeoutException: Read timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278)
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:489)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:483)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1460)
+	at java.base/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1066)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:291)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:347)
+	at java.base/java.io.BufferedInputStream.implRead(BufferedInputStream.java:420)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:399)
+	at java.base/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:827)
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:759)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1720)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:319)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadFileFromCFG(CurvesJsonProtocolHandler.java:256)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadAndDecompressFileFromCFG(CurvesJsonProtocolHandler.java:361)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadChunkFileFromCFG(CurvesJsonProtocolHandler.java:495)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.lambda$loadDataFromCFG$2(CurvesDataLoader.java:1642)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.performLoad(CurvesDataLoader.java:2004)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadDataFromCFG(CurvesDataLoader.java:1637)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadChunkData(CurvesDataLoader.java:1562)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:408)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:161)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.lambda$run$0(LoadDataAction.java:323)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.run(LoadDataAction.java:338)
+	at com.dukascopy.charts.data.datacache.FeedDataProvider.loadTicksDataSynched(FeedDataProvider.java:1419)
+	at com.dukascopy.api.impl.HistoryData.getTicksSecured(HistoryData.java:98)
+	at com.dukascopy.api.impl.History.lambda$getTicks$4(History.java:444)
+	at com.dukascopy.api.impl.History.lambda$doPrivileged$116(History.java:3573)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.api.impl.History.doPrivileged(History.java:3573)
+	at com.dukascopy.api.impl.History.getTicks(History.java:442)
+	at com.rws.dukas.JForex4ArchiveAuditor.processMonthWithRetry(JForex4ArchiveAuditor.java:338)
+	at com.rws.dukas.JForex4ArchiveAuditor.main(JForex4ArchiveAuditor.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-07-08 14:07:03.575 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 00:00:00:000], chunk to [2016-02-11 01:00:00:000]
+2026-07-08 14:07:03.575 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 01:00:00:000], chunk to [2016-02-11 02:00:00:000]
+2026-07-08 14:07:03.575 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 02:00:00:000], chunk to [2016-02-11 03:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 03:00:00:000], chunk to [2016-02-11 04:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 04:00:00:000], chunk to [2016-02-11 05:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 05:00:00:000], chunk to [2016-02-11 06:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 06:00:00:000], chunk to [2016-02-11 07:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 07:00:00:000], chunk to [2016-02-11 08:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 08:00:00:000], chunk to [2016-02-11 09:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 09:00:00:000], chunk to [2016-02-11 10:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 10:00:00:000], chunk to [2016-02-11 11:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 11:00:00:000], chunk to [2016-02-11 12:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 12:00:00:000], chunk to [2016-02-11 13:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 13:00:00:000], chunk to [2016-02-11 14:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 14:00:00:000], chunk to [2016-02-11 15:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 15:00:00:000], chunk to [2016-02-11 16:00:00:000]
+2026-07-08 14:07:03.576 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 16:00:00:000], chunk to [2016-02-11 17:00:00:000]
+2026-07-08 14:07:03.577 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 17:00:00:000], chunk to [2016-02-11 18:00:00:000]
+2026-07-08 14:07:03.577 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 18:00:00:000], chunk to [2016-02-11 19:00:00:000]
+2026-07-08 14:07:03.577 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 19:00:00:000], chunk to [2016-02-11 20:00:00:000]
+2026-07-08 14:07:03.577 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 20:00:00:000], chunk to [2016-02-11 21:00:00:000]
+2026-07-08 14:07:03.577 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 21:00:00:000], chunk to [2016-02-11 22:00:00:000]
+2026-07-08 14:07:03.577 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 22:00:00:000], chunk to [2016-02-11 23:00:00:000]
+2026-07-08 14:07:03.577 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-02-11 23:00:00:000], chunk to [2016-02-12 00:00:00:000]
+2026-07-08 14:08:35.197 WARN  com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler - Read timed out
+java.net.SocketTimeoutException: Read timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278)
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304)
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346)
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796)
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:489)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:483)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1460)
+	at java.base/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1066)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:291)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:347)
+	at java.base/java.io.BufferedInputStream.implRead(BufferedInputStream.java:420)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:399)
+	at java.base/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:827)
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:759)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1720)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1629)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.readURL(CurvesJsonProtocolHandler.java:319)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadFileFromCFG(CurvesJsonProtocolHandler.java:256)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadAndDecompressFileFromCFG(CurvesJsonProtocolHandler.java:361)
+	at com.dukascopy.charts.data.datacache.CurvesJsonProtocolHandler.loadChunkFileFromCFG(CurvesJsonProtocolHandler.java:495)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.lambda$loadDataFromCFG$2(CurvesDataLoader.java:1642)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.performLoad(CurvesDataLoader.java:2004)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadDataFromCFG(CurvesDataLoader.java:1637)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadChunkData(CurvesDataLoader.java:1562)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:408)
+	at com.dukascopy.charts.data.datacache.CurvesDataLoader.loadInCache(CurvesDataLoader.java:161)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.lambda$run$0(LoadDataAction.java:323)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.charts.data.datacache.LoadDataAction.run(LoadDataAction.java:338)
+	at com.dukascopy.charts.data.datacache.FeedDataProvider.loadTicksDataSynched(FeedDataProvider.java:1419)
+	at com.dukascopy.api.impl.HistoryData.getTicksSecured(HistoryData.java:98)
+	at com.dukascopy.api.impl.History.lambda$getTicks$4(History.java:444)
+	at com.dukascopy.api.impl.History.lambda$doPrivileged$116(History.java:3573)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at com.dukascopy.api.impl.History.doPrivileged(History.java:3573)
+	at com.dukascopy.api.impl.History.getTicks(History.java:442)
+	at com.rws.dukas.JForex4ArchiveAuditor.processMonthWithRetry(JForex4ArchiveAuditor.java:338)
+	at com.rws.dukas.JForex4ArchiveAuditor.main(JForex4ArchiveAuditor.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 00:00:00:000], chunk to [2016-05-22 01:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 01:00:00:000], chunk to [2016-05-22 02:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 02:00:00:000], chunk to [2016-05-22 03:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 03:00:00:000], chunk to [2016-05-22 04:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 04:00:00:000], chunk to [2016-05-22 05:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 05:00:00:000], chunk to [2016-05-22 06:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 06:00:00:000], chunk to [2016-05-22 07:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 07:00:00:000], chunk to [2016-05-22 08:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 08:00:00:000], chunk to [2016-05-22 09:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 09:00:00:000], chunk to [2016-05-22 10:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 10:00:00:000], chunk to [2016-05-22 11:00:00:000]
+2026-07-08 14:08:35.198 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 11:00:00:000], chunk to [2016-05-22 12:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 12:00:00:000], chunk to [2016-05-22 13:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 13:00:00:000], chunk to [2016-05-22 14:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 14:00:00:000], chunk to [2016-05-22 15:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 15:00:00:000], chunk to [2016-05-22 16:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 16:00:00:000], chunk to [2016-05-22 17:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 17:00:00:000], chunk to [2016-05-22 18:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 18:00:00:000], chunk to [2016-05-22 19:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 19:00:00:000], chunk to [2016-05-22 20:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 20:00:00:000], chunk to [2016-05-22 21:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 21:00:00:000], chunk to [2016-05-22 22:00:00:000]
+2026-07-08 14:08:35.199 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 22:00:00:000], chunk to [2016-05-22 23:00:00:000]
+2026-07-08 14:08:35.200 WARN  com.dukascopy.charts.data.datacache.LocalCacheManager - Some or all of the requested data was not found, instrument [EUR/USD], period [Ticks], side [null], chunk from [2016-05-22 23:00:00:000], chunk to [2016-05-23 00:00:00:000]

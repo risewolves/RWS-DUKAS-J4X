@@ -30,6 +30,54 @@ Unlike previous versions, this tool is designed for **reliable, unattended opera
 
 ---
 
+## The "Run Once" Workflow — How It Really Works
+
+**You only need to run the downloader ONCE.** It is designed to handle everything automatically from 2005 to 2026 without any manual intervention.
+
+Here is exactly what happens when you execute:
+
+```bash
+mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4Downloader"
+```
+
+1. **The Master Progress File**  
+   - The tool checks `.master_download_progress.txt` in the project root.  
+   - It skips every month that already has a `SUCCESS` status.  
+   - This file is **never archived or deleted**, so even if you stop the program with `Ctrl+C` and restart it, it picks up exactly where it left off. No data is lost, and no month is downloaded twice.
+
+2. **Continuous Month‑by‑Month Processing**  
+   - The loop runs from `2005-01` up to `2026-07`.  
+   - For each month, it attempts the download with built‑in retries (3 attempts) and weekly chunk fallback if needed.  
+   - The status (`SUCCESS` or `FAILED`) is written to the master progress file **immediately** after each month finishes.
+
+3. **Automatic Batch Archiving (Storage Management)**  
+   - Every time 36 months (3 years) are processed, the tool automatically:  
+     - Moves all CSV files from `./ohlcv_output/` to a new folder like `./archive/2005-2007/`.  
+     - Clears the working directory completely.  
+     - Continues downloading the next batch seamlessly.  
+   - **You never need to manually archive or delete anything.** The tool ensures that only the current batch stays in the working folder, keeping storage usage low.
+
+4. **Auto‑Backfill (Phase 2)**  
+   - After the main loop finishes processing all months, the tool enters **Phase 2**.  
+   - It looks at the list of months that were marked `FAILED` and **tries to download them again** (one final attempt).  
+   - If they succeed, the master progress file is updated to `SUCCESS`.  
+   - If they still fail, they are listed in the final report so you know exactly which months need manual attention.
+
+5. **Interruption Recovery**  
+   - If your VPS restarts, the SSH session drops, or you press `Ctrl+C` — **just run the exact same command again**.  
+   - The tool reads the master progress file, skips all already‑completed months, and continues from the next missing month.  
+   - There is **no setup step** and no manual calculation of where you left off.
+
+**In summary:**  
+You run **one command**, wait (overnight is recommended), and by the time it finishes, you will have:
+- All 258 months of data in the `./archive/` folder.
+- A clean final report showing exactly which months (if any) failed.
+- Zero storage bloat in the working directory.
+
+You do not need to run the script multiple times, you do not need to manually change date ranges, and you do not need to babysit the download. **Just run it once and let it run.**
+
+---
+
 ## Components
 
 ### 1. `JForex4Downloader.java` — Main Downloader
@@ -194,5 +242,4 @@ This project is provided under the MIT License. See the `LICENSE` file for detai
 - Full English language, clean project structure.
 
 If you encounter any issues, please check the logs printed to the console. The tools are designed to be self‑explanatory and recover from most failures automatically.
-
---- 
+```
