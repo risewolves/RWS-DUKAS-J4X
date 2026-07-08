@@ -1,6 +1,6 @@
-# RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v2.0.0)
+# RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v2.1.0)
 
-**Version 2.0.0** — Production‑ready historical downloader with automatic backfill, rate limiting, and batch archiving.
+**Version 2.1.0** — Production‑ready historical downloader with automatic backfill, rate limiting, batch archiving, and **clear instructions to get your CSV files onto your local computer** (Mac, Windows, or Linux).
 
 This Java project connects to the Dukascopy JForex platform (using the **JForex 4 API** – `IClient`) and downloads raw tick data for **EUR/USD** from **2005‑01‑01 to 2026‑07‑03**. It converts ticks into clean **1‑minute OHLCV bars** (Open, High, Low, Close, Volume) along with the **average spread**, and saves the result as **monthly CSV files**.
 
@@ -169,6 +169,74 @@ mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4ArchiveAuditor"
 
 ---
 
+## Downloading the Archived Data to Your Local Computer
+
+Once the downloader has finished running, all your monthly CSV files are safely stored inside the `archive/` folder on your VPS. Now you need to bring them onto your **local machine** (Mac, Windows, or Linux) so you can actually use the data.
+
+Here are the simplest and most reliable ways to do that.
+
+### For Mac or Linux (Terminal)
+
+Both macOS and Linux come with `scp` and `rsync` built‑in or easily installable.
+
+**1. Using `scp` (simple, no resume)**
+
+```bash
+scp -r root@<YOUR_VPS_IP>:/root/RWS-DUKAS-J4X/archive/ /path/to/your/local/folder/
+```
+
+- Replace `<YOUR_VPS_IP>` with your VPS’s public IP address.
+- The `-r` flag copies the entire folder recursively.
+- Example: `scp -r root@123.45.67.89:/root/RWS-DUKAS-J4X/archive/ ~/Documents/ForexData/`
+
+**2. Using `rsync` (recommended – supports resume)**
+
+If the transfer gets interrupted (network drop, laptop sleep), `rsync` can pick up where it left off without re‑copying everything.
+
+```bash
+rsync -avz --progress root@<YOUR_VPS_IP>:/root/RWS-DUKAS-J4X/archive/ /path/to/your/local/folder/archive/
+```
+
+- `-a` preserves the folder structure.
+- `-v` shows what’s being copied.
+- `-z` compresses data during transfer (saves bandwidth).
+- `--progress` shows a progress bar for each file.
+- If it stops, just run the exact same command again – it will only copy the files that haven’t finished yet.
+
+### For Windows (PowerShell or Command Prompt)
+
+**Option A: Use `scp` (if you have OpenSSH installed)**
+
+Windows 10/11 usually includes OpenSSH Client. Open **PowerShell** or **Command Prompt** and run:
+
+```bash
+scp -r root@<YOUR_VPS_IP>:/root/RWS-DUKAS-J4X/archive/ C:\Users\YourName\Documents\ForexData\
+```
+
+If you get an error about `scp` not found, you can install OpenSSH Client via Settings → Apps → Optional Features.
+
+**Option B: Use WinSCP (graphical)**
+
+1. Download and install [WinSCP](https://winscp.net/).
+2. Open WinSCP, choose **SFTP** as the file protocol.
+3. Enter your VPS IP, username (`root`), and password.
+4. Click **Login**.
+5. In the right panel, navigate to `/root/RWS-DUKAS-J4X/archive/`.
+6. In the left panel, navigate to where you want to save the data on your Windows machine.
+7. Select the `archive/` folder and drag it to the left panel (or click **Download**).
+
+**Option C: Use `rsync` via WSL (Windows Subsystem for Linux)**
+
+If you use WSL (Ubuntu or similar) on Windows, you can run the same `rsync` command as for Linux inside your WSL terminal.
+
+### Important Notes
+
+- The entire `archive/` folder will be **about 3 GB** in size (for 21 years of 1‑minute OHLCV data). This is usually fine even on a slow connection, but it may take a while – be patient.
+- **Do not** zip the whole archive into one single file if you plan to upload it to Terabox – Terabox has a **2 GiB file size limit**. Instead, keep the individual CSV files (each is < 20 MB) and copy the folder as‑is.
+- After copying, you can verify the data by opening any CSV file with Excel, Google Sheets, or a text editor.
+
+---
+
 ## Configuration
 
 All key parameters are at the top of each class as `static final` constants. You can adjust:
@@ -235,11 +303,7 @@ This project is provided under the MIT License. See the `LICENSE` file for detai
 
 ## Final Note
 
-**Version 2.0.0** is the culmination of all the improvements requested:
-- Reliable `IClient`-based downloading (not the flaky tester client).
-- Automatic batch archiving to keep storage usage low.
-- A separate audit tool to verify and backfill archives.
-- Full English language, clean project structure.
+**Version 2.1.0** adds clear, step‑by‑step instructions for downloading the archived CSV files to your local machine – whether you use Mac, Windows, or Linux. Everything else remains as reliable as before.
 
 If you encounter any issues, please check the logs printed to the console. The tools are designed to be self‑explanatory and recover from most failures automatically.
-```
+---

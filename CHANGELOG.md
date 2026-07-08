@@ -4,6 +4,21 @@ All notable changes to this project are documented in this file.
 
 ---
 
+## [2.1.0] - 2026-07-08
+
+### Added
+
+- **Platform‑specific data transfer guide** — The `README.md` now includes a dedicated section that shows you exactly how to copy the `archive/` folder from your VPS to your local machine. It covers:
+  - `scp` and `rsync` for **Mac and Linux** (with a clear explanation of why `rsync` is better for resuming interrupted transfers).
+  - `scp` and **WinSCP** for **Windows** users, plus a quick note on using WSL if you prefer the command line.
+  - A practical warning about the Terabox 2 GB file size limit (so you don't accidentally zip everything into one huge file and fail to upload it).
+
+### Changed
+
+- **Documentation clarity** — The main `README.md` has been restructured to make the post‑download workflow more obvious. Instead of just telling you where the files are, it now holds your hand through the process of pulling them down to your actual working machine, whether you are on a Mac, a Windows PC, or a Linux laptop.
+
+---
+
 ## [2.0.0] - 2026-07-08
 
 ### Added
@@ -134,4 +149,4 @@ All notable changes to this project are documented in this file.
 
 ---
 
-**Note:** Version 2.0.0 is a **major rewrite** that supersedes v1.0.0. The old `ITesterClient`-based downloader has been completely replaced. Users are strongly encouraged to migrate to v2.0.0 for reliable, unattended historical downloads.
+**Note:** Version 2.0.0 was a **major rewrite** that replaced the old `ITesterClient`-based downloader. Version 2.1.0 keeps all that solid work intact but adds a much-needed, practical guide to actually getting the data onto your own computer.
