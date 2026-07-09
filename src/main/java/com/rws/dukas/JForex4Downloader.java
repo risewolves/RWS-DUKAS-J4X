@@ -33,7 +33,7 @@ public class JForex4Downloader {
     private static final String PASSWORD = "YciXg";
     private static final String JNLP_URL = "http://platform.dukascopy.com/demo_4/jforex_4.jnlp";
 
-    private static final Instrument INSTRUMENT = Instrument.XAUUSD;
+    private static final Instrument INSTRUMENT = Instrument.BTCUSD;
     private static final String OUTPUT_DIR = "./ohlcv_output/";
     private static final String ARCHIVE_BASE_DIR = "./archive/";
 
@@ -375,7 +375,7 @@ public class JForex4Downloader {
     }
 
     private static void moveSingleFileToArchive(String monthKey) {
-        String fileName = "XAUUSD_" + monthKey + "_1min_OHLCV.csv";
+        String fileName = "BTCUSD_" + monthKey + "_1min_OHLCV.csv";
         Path src = Paths.get(OUTPUT_DIR, fileName);
         if (!Files.exists(src)) return;
 
@@ -414,7 +414,7 @@ public class JForex4Downloader {
     // ==================== PROCESS MONTH WITH RETRY ====================
     private static boolean processMonthWithRetry(IHistory history, int year, int month) {
         String monthStr = String.format("%04d-%02d", year, month);
-        String outputFile = OUTPUT_DIR + "XAUUSD_" + monthStr + "_1min_OHLCV.csv";
+        String outputFile = OUTPUT_DIR + "BTCUSD_" + monthStr + "_1min_OHLCV.csv";
 
         LocalDateTime startLdt = LocalDateTime.of(year, month, 1, 0, 0, 0);
         LocalDateTime endLdt;
@@ -482,7 +482,7 @@ public class JForex4Downloader {
 
     private static boolean processMonthDirect(IHistory history, int year, int month) {
         String monthStr = String.format("%04d-%02d", year, month);
-        String outputFile = OUTPUT_DIR + "XAUUSD_" + monthStr + "_1min_OHLCV.csv";
+        String outputFile = OUTPUT_DIR + "BTCUSD_" + monthStr + "_1min_OHLCV.csv";
 
         LocalDateTime startLdt = LocalDateTime.of(year, month, 1, 0, 0, 0);
         LocalDateTime endLdt;
