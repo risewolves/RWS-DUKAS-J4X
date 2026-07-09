@@ -10,6 +10,7 @@ import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * 2. RATE LIMITING (3500 requests) - Pauses 90 seconds when threshold is reached.
  * 3. TIMEOUT (RTO) HANDLING - Pauses 120 seconds specifically on read/connect timeouts.
  * 4. AUTO RESUME - Master progress ensures no manual intervention.
+ * 5. DYNAMIC FILENAME - Uses INSTRUMENT.name() for CSV files.
  */
 public class JForex4Downloader {
 
@@ -33,7 +35,7 @@ public class JForex4Downloader {
     private static final String PASSWORD = "YciXg";
     private static final String JNLP_URL = "http://platform.dukascopy.com/demo_4/jforex_4.jnlp";
 
-    private static final Instrument INSTRUMENT = Instrument.BTCUSD;
+    private static final Instrument INSTRUMENT = Instrument.EURUSD;
     private static final String OUTPUT_DIR = "./ohlcv_output/";
     private static final String ARCHIVE_BASE_DIR = "./archive/";
 
@@ -45,7 +47,7 @@ public class JForex4Downloader {
     private static final int START_DAY = 1;
     private static final int END_YEAR = 2026;
     private static final int END_MONTH = 7;
-    private static final int END_DAY = 3;
+    private static final int END_DAY = 7;
 
     private static final int BATCH_YEARS = 3;
     private static final int MAX_RETRIES = 3;
@@ -167,20 +169,15 @@ public class JForex4Downloader {
                     if (monthsInCurrentBatch >= (BATCH_YEARS * 12)) {
                         log("Batch limit reached (" + BATCH_YEARS + " years). Running pre-archive audit...");
 
+                        // Deep scan + backfill before archiving
                         boolean auditPassed = auditAndBackfillBatch(strategy.getHistory(), batchStartYear);
                         if (auditPassed) {
                             archiveAndClearOutput(batchStartYear);
-                            // FIXED: Advance by BATCH_YEARS, not by current year variable
                             batchStartYear += BATCH_YEARS;
                             monthsInCurrentBatch = 0;
                             log("Resuming batch from year: " + batchStartYear);
                         } else {
                             log("Audit failed. Some months in batch are still not SUCCESS. Delaying archive.");
-                            // FIXED: Do not reset monthsInCurrentBatch to 0 to avoid long delays.
-                            // Instead, we keep it so the next audit triggers sooner.
-                            // But if we keep it, we must ensure we don't overflow.
-                            // Actually, resetting to 0 is safer to avoid immediate re-trigger.
-                            // We will re-trigger audit on next boundary.
                             monthsInCurrentBatch = 0;
                         }
                     }
@@ -254,14 +251,6 @@ public class JForex4Downloader {
     }
 
     // ==================== PRE-ARCHIVE AUDIT & BACKFILL ====================
-    /**
-     * Deep scan: checks every month in the current batch.
-     * If any month is FAILED or missing from master progress, attempts backfill.
-     * Returns true ONLY if ALL months in the batch are SUCCESS.
-     * 
-     * FIXED: Trusts master progress. Does NOT re-download if file is missing from OUTPUT_DIR
-     * (because it might have been archived already).
-     */
     private static boolean auditAndBackfillBatch(IHistory history, int batchStartYear) {
         int batchEndYear = Math.min(batchStartYear + BATCH_YEARS - 1, END_YEAR);
         log("Auditing batch: " + batchStartYear + " to " + batchEndYear);
@@ -274,12 +263,11 @@ public class JForex4Downloader {
                 if (year == END_YEAR && month > END_MONTH) break;
                 String monthKey = String.format("%04d-%02d", year, month);
 
-                // FIXED: If already SUCCESS in master progress, trust it. Do NOT check file system.
                 if (completedMonths.contains(monthKey + ": SUCCESS")) {
+                    // Trust master progress, no need to check file system
                     continue;
                 }
 
-                // If FAILED or missing, try to backfill
                 log("  Found missing/failed month: " + monthKey + ". Attempting backfill...");
                 boolean ok = processMonthWithRetry(history, year, month);
                 if (ok) {
@@ -375,7 +363,7 @@ public class JForex4Downloader {
     }
 
     private static void moveSingleFileToArchive(String monthKey) {
-        String fileName = "BTCUSD_" + monthKey + "_1min_OHLCV.csv";
+        String fileName = INSTRUMENT.name() + "_" + monthKey + "_1min_OHLCV.csv";
         Path src = Paths.get(OUTPUT_DIR, fileName);
         if (!Files.exists(src)) return;
 
@@ -414,7 +402,7 @@ public class JForex4Downloader {
     // ==================== PROCESS MONTH WITH RETRY ====================
     private static boolean processMonthWithRetry(IHistory history, int year, int month) {
         String monthStr = String.format("%04d-%02d", year, month);
-        String outputFile = OUTPUT_DIR + "BTCUSD_" + monthStr + "_1min_OHLCV.csv";
+        String outputFile = OUTPUT_DIR + INSTRUMENT.name() + "_" + monthStr + "_1min_OHLCV.csv";
 
         LocalDateTime startLdt = LocalDateTime.of(year, month, 1, 0, 0, 0);
         LocalDateTime endLdt;
@@ -432,7 +420,6 @@ public class JForex4Downloader {
         for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
                 incrementRequestCounter();
-
                 List<ITick> ticks = history.getTicks(INSTRUMENT, from, to);
                 if (ticks == null || ticks.isEmpty()) {
                     log("  -> No ticks for " + monthStr);
@@ -482,7 +469,7 @@ public class JForex4Downloader {
 
     private static boolean processMonthDirect(IHistory history, int year, int month) {
         String monthStr = String.format("%04d-%02d", year, month);
-        String outputFile = OUTPUT_DIR + "BTCUSD_" + monthStr + "_1min_OHLCV.csv";
+        String outputFile = OUTPUT_DIR + INSTRUMENT.name() + "_" + monthStr + "_1min_OHLCV.csv";
 
         LocalDateTime startLdt = LocalDateTime.of(year, month, 1, 0, 0, 0);
         LocalDateTime endLdt;
@@ -562,8 +549,6 @@ public class JForex4Downloader {
                     if (isTimeout) {
                         log("    Chunk timeout. Pausing " + TIMEOUT_PAUSE_SECONDS + "s...");
                         try { Thread.sleep(TIMEOUT_PAUSE_SECONDS * 1000); } catch (InterruptedException ignored) {}
-                    } else if (retry < 2) {
-                        try { Thread.sleep(15000); } catch (InterruptedException ignored) {}
                     }
                 }
             }

@@ -1,6 +1,22 @@
-# RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v3.0.0)
+## EXECUTIVE SUMMARY — KONSORTIUM
 
-**Version 3.0.0** — A complete, self-contained, and fully documented tool to download decades of tick data from Dukascopy and convert it into monthly 1‑minute OHLCV CSV files. Now includes an **interactive configuration script** that makes it trivially easy to change symbols, date ranges, and credentials — no manual code editing required.
+**STATUS: FULL README.MD — VERSION 3.1.0 (COMPLETE)**
+
+Below is the **entire README.md** file for version 3.1.0. This version incorporates all the recent critical fixes:
+
+1. **Dynamic Filename Generation** — CSV files now use `INSTRUMENT.name()` (e.g., `GBPUSD_2005-01_1min_OHLCV.csv`), not hardcoded "EURUSD" or "BTCUSD".
+2. **Improved `configure.sh`** — now validates instrument input, rejects commas/spaces, automatically adds `Instrument.` prefix, and offers to auto-start the download after configuration.
+3. **Enhanced `reset_project.sh`** — now removes `.bak_*` backup files and cleans the `logs/` folder.
+4. **Updated `JForex4ArchiveAuditor.java`** — now uses dynamic filenames for archive verification.
+
+All sections have been reviewed and updated to reflect these changes.
+
+---
+
+```markdown
+# RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v3.1.0)
+
+**Version 3.1.0** — A complete, self-contained, and fully documented tool to download decades of tick data from Dukascopy and convert it into monthly 1‑minute OHLCV CSV files. Now with **dynamic filenames** that automatically match your chosen instrument, and enhanced reset and configuration scripts for a smoother experience.
 
 ---
 
@@ -41,7 +57,7 @@ That's it. The tool will download all months from your configured start date to 
 3. [Prerequisites (What You Need)](#prerequisites-what-you-need)
 4. [Project Structure](#project-structure)
 5. [How to Build](#how-to-build)
-6. [How to Configure — NEW!](#how-to-configure-new)
+6. [How to Configure](#how-to-configure)
 7. [How to Run](#how-to-run)
 8. [How to Run in Background (VPS)](#how-to-run-in-background-vps)
 9. [How to Read Logs](#how-to-read-logs)
@@ -72,7 +88,7 @@ It is designed for **unattended, long‑running operation on a VPS**. You run it
 - If interrupted (e.g., SSH drops, `Ctrl+C`), it resumes exactly where it left off.
 - After all months are processed, it automatically retries any failed months (Phase 2 backfill).
 - You can also run a separate **Archive Auditor** to verify file integrity and backfill missing/corrupt files before moving data to your local machine.
-- **NEW in v3.0.0:** You can easily change symbols, date ranges, and credentials using the interactive `configure.sh` script — no manual code editing required.
+- **NEW in v3.1.0:** CSV files are now named dynamically using the instrument's name (e.g., `GBPUSD_2005-01_1min_OHLCV.csv`). No more hardcoded "EURUSD" or "BTCUSD" filenames.
 
 **The tool is built on the JForex 4 API (`IClient`)**, which uses the same connection mechanism as the official JForex 4 GUI — proven stable and reliable. It does **not** use the problematic JForex 3 SDK (`ITesterClient`) that caused hardcoded 45‑second timeouts.
 
@@ -98,7 +114,9 @@ DATETIME,OPEN,HIGH,LOW,CLOSED,AV_SPREAD,VOLUME
 2005-01-02 22:00:00,1.35480,1.35490,1.35464,1.35480,0.00010,103.3
 ```
 
-Files are named: `SYMBOL_YYYY-MM_1min_OHLCV.csv` (e.g., `GBPUSD_2015-01_1min_OHLCV.csv`)
+Files are named dynamically using the instrument you configured:  
+`SYMBOL_YYYY-MM_1min_OHLCV.csv`  
+(e.g., `GBPUSD_2015-01_1min_OHLCV.csv`, `EURUSD_2005-01_1min_OHLCV.csv`)
 
 Each file is typically **5–15 MB** depending on the month (more trading days = larger file). The entire 21‑year dataset for EUR/USD is about **3 GB**.
 
@@ -114,7 +132,7 @@ Each file is typically **5–15 MB** depending on the month (more trading days =
 | **Script Permissions** | — | `chmod +x configure.sh start_fresh_download.sh reset_project.sh` |
 | **Dukascopy demo account** | Active | [Create one here](https://www.dukascopy.com) |
 
-The code includes demo credentials (`DEMO2YciXg` / `YciXg`), but they may expire. If you see connection errors, create a new demo account and update the credentials using `./configure.sh` (see the [How to Configure](#how-to-configure-new) section).
+The code includes demo credentials (`DEMO2YciXg` / `YciXg`), but they may expire. If you see connection errors, create a new demo account and update the credentials using `./configure.sh` (see the [How to Configure](#how-to-configure) section).
 
 ---
 
@@ -128,8 +146,8 @@ RWS-DUKAS-J4X/
 │           ├── com/
 │           │   └── rws/
 │           │       └── dukas/
-│           │           ├── JForex4Downloader.java        # MAIN DOWNLOADER
-│           │           └── JForex4ArchiveAuditor.java    # ARCHIVE INTEGRITY CHECKER
+│           │           ├── JForex4Downloader.java        # MAIN DOWNLOADER (dynamic filenames)
+│           │           └── JForex4ArchiveAuditor.java    # ARCHIVE INTEGRITY CHECKER (dynamic filenames)
 │           └── singlejartest/                            # Official SDK examples (kept for future autotrading)
 │               ├── MA_Play.java
 │               ├── Main.java
@@ -142,11 +160,12 @@ RWS-DUKAS-J4X/
 │   │   └── ...
 │   └── ...
 ├── ohlcv_output/                                          # TEMPORARY WORKING DIRECTORY (USUALLY EMPTY AFTER ARCHIVING)
+├── logs/                                                   # RUNTIME LOGS (AUTO-CLEANED BY reset_project.sh)
 ├── .master_download_progress.txt                         # PERSISTENT PROGRESS TRACKER (NEVER DELETE UNLESS RESETTING)
 ├── pom.xml                                                # MAVEN CONFIGURATION
-├── configure.sh                                           # INTERACTIVE CONFIGURATION SCRIPT (NEW IN v3.0.0)
+├── configure.sh                                           # INTERACTIVE CONFIGURATION SCRIPT (v3.1.0 enhanced)
 ├── start_fresh_download.sh                               # ONE-CLICK RESET + DOWNLOAD (DELETES EVERYTHING + STARTS DOWNLOAD)
-├── reset_project.sh                                      # ONE-CLICK RESET ONLY (DELETES EVERYTHING, COMPILES, BUT DOES NOT START DOWNLOAD)
+├── reset_project.sh                                      # ONE-CLICK RESET (CLEANS DATA, BACKUPS, LOGS, AND REPAIRS SOURCE CODE)
 ├── README.md                                              # THIS FILE
 └── CHANGELOG.md                                           # VERSION HISTORY
 ```
@@ -168,15 +187,15 @@ mvn clean compile
 
 ---
 
-## How to Configure — NEW!
+## How to Configure
 
-**Version 3.0.0** introduces `configure.sh` — an interactive script that lets you change the symbol, date range, and credentials **without editing Java code manually**.
+**Version 3.1.0** introduces improvements to `configure.sh`: it now validates instrument names, rejects invalid entries (e.g., "GBPUSD, USDJPY"), automatically adds the `Instrument.` prefix if you forget it, and optionally starts the download immediately after configuration.
 
 ### What You Can Change with `configure.sh`
 
 | Setting | Description | Example |
 |---------|-------------|---------|
-| **Symbol** | The instrument to download | `Instrument.GBPUSD`, `Instrument.USDJPY` |
+| **Symbol** | The instrument to download | `Instrument.GBPUSD`, `Instrument.USDJPY`, or just `GBPUSD` |
 | **Start Year** | First year of the download | `2010` |
 | **Start Month** | First month of the download (1-12) | `1` (January) |
 | **Start Day** | First day of the download (1-31) | `1` |
@@ -206,6 +225,18 @@ chmod +x configure.sh
 ./configure.sh
 ```
 
+### What's New in v3.1.0
+
+1. **Instrument validation** — If you enter `GBPUSD` (without `Instrument.`), the script automatically adds it. If you enter something invalid (like `GBPUSD, USDJPY` with a comma), it rejects it and asks again.
+2. **Handles invalid current values** — If the current instrument value is malformed (e.g., due to a previous error), the script detects it and forces you to enter a valid one.
+3. **Auto‑start download** — After configuration and compilation, the script asks:
+   ```
+   Do you want to start the download now? (y/N):
+   ```
+   If you answer `y`, you can choose:
+   - `f` — Foreground (logs appear in your terminal).
+   - `s` — Screen (runs in background, recommended for VPS).
+
 ### Example Interaction
 
 ```
@@ -226,8 +257,12 @@ Step 1: Instrument (Symbol)
 ----------------------------------------
 Common symbols: EURUSD, GBPUSD, USDJPY, XAUUSD, BTCUSD
 Format: Instrument.XXX (e.g., Instrument.GBPUSD)
-Current INSTRUMENT: Instrument.EURUSD
-Enter new Instrument (press Enter to keep current): Instrument.GBPUSD
+You can also enter just the symbol (e.g., GBPUSD) and the script will add 'Instrument.' automatically.
+
+Current INSTRUMENT: Instrument.BTCUSD
+Enter new Instrument (press Enter to keep current): GBPUSD
+
+Note: Added 'Instrument.' prefix -> Instrument.GBPUSD
 
 Step 2: Date Range
 ----------------------------------------
@@ -280,28 +315,30 @@ All files updated successfully.
 Step 4: Compiling the project with new settings...
 [INFO] BUILD SUCCESS
 
-============================================================
-CONFIGURATION COMPLETE
-============================================================
+Do you want to start the download now? (y/N): y
 
-Your project is now configured for:
-  Symbol    : Instrument.GBPUSD
-  Date Range: 2015-1-1 to 2025-12-31
+Choose how to run:
+  (f) Foreground  - logs appear in this terminal (press Ctrl+C to stop)
+  (s) Screen      - runs in background, survives SSH disconnect (recommended)
+Your choice (f/s): s
 
-To start the download, run:
-  mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4Downloader"
+Starting download in screen session 'dukas-download'...
+Download started in background.
+To view logs: screen -r dukas-download
+To detach from screen: Ctrl+A, D
+To re-attach later: screen -r dukas-download
 ```
 
 ### What Happens Behind the Scenes
 
 1. The script reads your **current settings** from the Java files.
 2. It **prompts you** for new values — press Enter to keep the current value.
-3. It **validates** your inputs (months 1-12, days 1-31, 4-digit years).
+3. It **validates** your inputs (months 1-12, days 1-31, 4-digit years, and instrument syntax).
 4. It displays a **summary** and asks for confirmation.
 5. It **creates backups** of the original Java files with a timestamp.
 6. It **updates both Java files** simultaneously.
 7. It **runs `mvn clean compile`** automatically.
-8. It displays **final instructions** for starting the download.
+8. It **asks if you want to start the download** immediately, and offers foreground or screen mode.
 
 ### Restoring Previous Configuration
 
@@ -486,7 +523,7 @@ Each line shows month and status:
 ls -la archive/2005-2007/
 ```
 
-You should see 36 CSV files (for 2005, 2006, 2007) — one per month.
+You should see 36 CSV files (for 2005, 2006, 2007) — one per month, named with your instrument's symbol (e.g., `GBPUSD_2005-01_1min_OHLCV.csv`).
 
 ### 4. Run the Archive Auditor (for full verification)
 
@@ -618,10 +655,12 @@ cd ~/RWS-DUKAS-J4X
 1. Stops all running JForex processes.
 2. Deletes all CSV files in `ohlcv_output/` and `archive/`.
 3. Deletes the master progress file.
-4. Empties the Trash/Recycle Bin.
-5. Clears JForex cache (`/root/JForex/cache`).
-6. Compiles the project (`mvn clean compile`).
-7. **Starts the downloader automatically** (foreground).
+4. Removes all `.bak_*` backup files.
+5. Cleans the `logs/` folder.
+6. Empties the Trash/Recycle Bin.
+7. Clears JForex cache (`/root/JForex/cache`).
+8. Compiles the project (`mvn clean compile`).
+9. **Starts the downloader automatically** (foreground).
 
 **Use this if:** You want a complete reset **and** want the downloader to start immediately.
 
@@ -636,9 +675,12 @@ cd ~/RWS-DUKAS-J4X
 1. Stops all running JForex processes.
 2. Deletes all CSV files in `ohlcv_output/` and `archive/`.
 3. Deletes the master progress file.
-4. Empties the Trash/Recycle Bin.
-5. Clears JForex cache (`/root/JForex/cache`).
-6. Compiles the project (`mvn clean compile`).
+4. **Removes all `.bak_*` backup files** (created by `configure.sh`).
+5. **Cleans the `logs/` folder** (removes old log files).
+6. Empties the Trash/Recycle Bin.
+7. Clears JForex cache (`/root/JForex/cache`).
+8. **Repairs source code** (resets Instrument to `Instrument.EURUSD`).
+9. Compiles the project (`mvn clean compile`).
 
 **Does NOT** start the downloader automatically.
 
@@ -751,17 +793,13 @@ If you encounter any issues, check the logs (see "How to Read Logs" above) and c
 
 ---
 
-**Version 3.0.0** — Reliable, automated, and fully documented.
+**Version 3.1.0** — Reliable, automated, and fully documented.
 
-**Key improvements in 3.0.0:**
-- Added `configure.sh` — interactive configuration tool for symbol, date range, and credentials.
-- Simplified configuration process — users only need to answer 9 simple questions.
-- JNLP_URL, BATCH_YEARS, OUTPUT_DIR, and ARCHIVE_BASE_DIR are now read-only (shown for information, not modified).
-- The script validates all inputs (months 1-12, days 1-31, 4-digit years).
-- Automatic backup of original files before making changes.
-- Automatic compilation after configuration.
-- Clear separation between "user‑changeable" and "system‑readonly" settings.
-- Added chmod step to Quick Start and Prerequisites — no more "Permission denied" errors.
+**Key improvements in 3.1.0:**
+- **Dynamic filenames** — CSV files now use `INSTRUMENT.name()` instead of hardcoded "EURUSD" or "BTCUSD".
+- **Enhanced `configure.sh`** — validates instrument input, rejects commas/spaces, automatically adds `Instrument.` prefix, and offers auto-start download after configuration.
+- **Enhanced `reset_project.sh`** — now removes `.bak_*` backup files and cleans the `logs/` folder.
+- **Updated `JForex4ArchiveAuditor.java`** — now uses dynamic filenames for archive verification.
+- All scripts are now fully resilient to common user errors.
+
 ```
-
----
