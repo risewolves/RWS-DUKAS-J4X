@@ -1,6 +1,6 @@
-# RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v2.2.0)
+# RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v3.0.0)
 
-**Version 2.2.0** — A complete, self-contained, and fully documented tool to download 21 years of EUR/USD tick data from Dukascopy and convert it into monthly 1‑minute OHLCV CSV files.
+**Version 3.0.0** — A complete, self-contained, and fully documented tool to download 21 years of EUR/USD tick data from Dukascopy and convert it into monthly 1‑minute OHLCV CSV files. Now includes an **interactive configuration script** that makes it trivially easy to change symbols, date ranges, and credentials.
 
 ---
 
@@ -12,19 +12,22 @@ If you just want to get it running right now:
 # 1. Clone or navigate to the project
 cd ~/RWS-DUKAS-J4X
 
-# 2. Compile
+# 2. (Optional) Configure symbol, date range, and credentials
+./configure.sh
+
+# 3. Compile
 mvn clean compile
 
-# 3. Run in background (screen)
+# 4. Run in background (screen)
 screen -S dukas-download
 mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4Downloader"
 # Press Ctrl+A, then D to detach
 
-# 4. Check progress later
+# 5. Check progress later
 screen -r dukas-download
 ```
 
-That's it. The tool will download all months from 2005‑01 to 2026‑07, archive every 3 years, and automatically retry any failed months. Come back in a few hours (or overnight) and your data will be ready.
+That's it. The tool will download all months from your configured start date to end date, archive every 3 years, and automatically retry any failed months. Come back in a few hours (or overnight) and your data will be ready.
 
 ---
 
@@ -35,18 +38,18 @@ That's it. The tool will download all months from 2005‑01 to 2026‑07, archiv
 3. [Prerequisites (What You Need)](#prerequisites-what-you-need)
 4. [Project Structure](#project-structure)
 5. [How to Build](#how-to-build)
-6. [How to Run](#how-to-run)
-7. [How to Run in Background (VPS)](#how-to-run-in-background-vps)
-8. [How to Read Logs](#how-to-read-logs)
-9. [How to Resume After Interruption](#how-to-resume-after-interruption)
-10. [How to Verify the Results](#how-to-verify-the-results)
-11. [How to Download the Archive to Your Local Machine](#how-to-download-the-archive-to-your-local-machine)
-12. [How to Handle Errors](#how-to-handle-errors)
-13. [How to Restart from a Specific Month](#how-to-restart-from-a-specific-month-advanced)
-14. [How to Clean Everything and Start Fresh](#how-to-clean-everything-and-start-fresh)
-15. [How the Archiving Logic Works (BATCH_YEARS)](#how-the-archiving-logic-works-batch_years)
-16. [How the Weekly Fallback Works](#how-the-weekly-fallback-works)
-17. [How to Update Credentials](#how-to-update-credentials)
+6. [How to Configure — NEW!](#how-to-configure-new)
+7. [How to Run](#how-to-run)
+8. [How to Run in Background (VPS)](#how-to-run-in-background-vps)
+9. [How to Read Logs](#how-to-read-logs)
+10. [How to Resume After Interruption](#how-to-resume-after-interruption)
+11. [How to Verify the Results](#how-to-verify-the-results)
+12. [How to Download the Archive to Your Local Machine](#how-to-download-the-archive-to-your-local-machine)
+13. [How to Handle Errors](#how-to-handle-errors)
+14. [How to Restart from a Specific Month](#how-to-restart-from-a-specific-month-advanced)
+15. [How to Clean Everything and Start Fresh](#how-to-clean-everything-and-start-fresh)
+16. [How the Archiving Logic Works (BATCH_YEARS)](#how-the-archiving-logic-works-batch_years)
+17. [How the Weekly Fallback Works](#how-the-weekly-fallback-works)
 18. [Known Limitations](#known-limitations)
 19. [License](#license)
 20. [Final Thoughts](#final-thoughts)
@@ -55,7 +58,7 @@ That's it. The tool will download all months from 2005‑01 to 2026‑07, archiv
 
 ## What This Tool Does
 
-This Java application connects to Dukascopy's JForex platform, pulls raw tick data for EUR/USD from **2005‑01‑01 to 2026‑07‑03**, and converts it into clean 1‑minute OHLCV bars (Open, High, Low, Close, Volume) with average spread. The output is one CSV file per month.
+This Java application connects to Dukascopy's JForex platform, pulls raw tick data for **any supported forex symbol** from your configured date range, and converts it into clean 1‑minute OHLCV bars (Open, High, Low, Close, Volume) with average spread. The output is one CSV file per month.
 
 It is designed for **unattended, long‑running operation on a VPS**. You run it **once**, and it handles everything automatically:
 
@@ -65,6 +68,7 @@ It is designed for **unattended, long‑running operation on a VPS**. You run it
 - If interrupted (e.g., SSH drops, `Ctrl+C`), it resumes exactly where it left off.
 - After all months are processed, it automatically retries any failed months (Phase 2 backfill).
 - You can also run a separate **Archive Auditor** to verify file integrity and backfill missing/corrupt files before moving data to your local machine.
+- **NEW in v3.0.0:** You can easily change symbols, date ranges, and credentials using the interactive `configure.sh` script — no manual code editing required.
 
 **The tool is built on the JForex 4 API (`IClient`)**, which uses the same connection mechanism as the official JForex 4 GUI — proven stable and reliable. It does **not** use the problematic JForex 3 SDK (`ITesterClient`) that caused hardcoded 45‑second timeouts.
 
@@ -105,7 +109,7 @@ Each file is typically **5–15 MB** depending on the month (more trading days =
 | **screen** (recommended for background) | Any | `sudo apt install screen` |
 | **Dukascopy demo account** | Active | [Create one here](https://www.dukascopy.com) |
 
-The code includes demo credentials (`DEMO2YciXg` / `YciXg`), but they may expire. If you see connection errors, create a new demo account and update the credentials (see [How to Update Credentials](#how-to-update-credentials)).
+The code includes demo credentials (`DEMO2YciXg` / `YciXg`), but they may expire. If you see connection errors, create a new demo account and update the credentials using `./configure.sh` (see the next section).
 
 ---
 
@@ -135,6 +139,7 @@ RWS-DUKAS-J4X/
 ├── ohlcv_output/                                          # TEMPORARY WORKING DIRECTORY (USUALLY EMPTY AFTER ARCHIVING)
 ├── .master_download_progress.txt                         # PERSISTENT PROGRESS TRACKER (NEVER DELETE UNLESS RESETTING)
 ├── pom.xml                                                # MAVEN CONFIGURATION
+├── configure.sh                                           # INTERACTIVE CONFIGURATION SCRIPT (NEW IN v3.0.0)
 ├── start_fresh_download.sh                               # ONE-CLICK RESET + DOWNLOAD (DELETES EVERYTHING + STARTS DOWNLOAD)
 ├── reset_project.sh                                      # ONE-CLICK RESET ONLY (DELETES EVERYTHING, COMPILES, BUT DOES NOT START DOWNLOAD)
 ├── README.md                                              # THIS FILE
@@ -153,6 +158,161 @@ mvn clean compile
 If Maven reports errors about `JAVA_HOME`, set it explicitly:
 ```bash
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+mvn clean compile
+```
+
+---
+
+## How to Configure — NEW!
+
+**Version 3.0.0** introduces `configure.sh` — an interactive script that lets you change the symbol, date range, and credentials **without editing Java code manually**.
+
+### What You Can Change with `configure.sh`
+
+| Setting | Description | Example |
+|---------|-------------|---------|
+| **Symbol** | The instrument to download | `Instrument.GBPUSD`, `Instrument.USDJPY` |
+| **Start Year** | First year of the download | `2010` |
+| **Start Month** | First month of the download (1-12) | `1` (January) |
+| **Start Day** | First day of the download (1-31) | `1` |
+| **End Year** | Last year of the download | `2025` |
+| **End Month** | Last month of the download (1-12) | `12` (December) |
+| **End Day** | Last day of the download (1-31) | `31` |
+| **Username** | Dukascopy demo account username | `DEMO2YciXg` |
+| **Password** | Dukascopy demo account password | `YciXg` |
+
+### What You DON'T Need to Change (Read-Only)
+
+These settings are **automatically displayed** for your reference but are **not modified** by the script:
+- `JNLP_URL` — connection endpoint (rarely changes)
+- `BATCH_YEARS` — archiving interval (3 years by default)
+- `OUTPUT_DIR` — temporary working directory
+- `ARCHIVE_BASE_DIR` — archive destination folder
+
+### How to Use `configure.sh`
+
+```bash
+cd ~/RWS-DUKAS-J4X
+
+# Make it executable (first time only)
+chmod +x configure.sh
+
+# Run it
+./configure.sh
+```
+
+### Example Interaction
+
+```
+============================================================
+=== RWS-DUKAS-J4X — QUICK CONFIGURATION TOOL ===
+============================================================
+
+Current System Settings (Read-Only):
+----------------------------------------
+  JNLP URL        : http://platform.dukascopy.com/demo_4/jforex_4.jnlp
+  Batch Years     : 3
+  Output Dir      : ./ohlcv_output/
+  Archive Dir     : ./archive/
+----------------------------------------
+These settings rarely change. They are shown for your reference.
+
+Step 1: Instrument (Symbol)
+----------------------------------------
+Common symbols: EURUSD, GBPUSD, USDJPY, XAUUSD, BTCUSD
+Format: Instrument.XXX (e.g., Instrument.GBPUSD)
+Current INSTRUMENT: Instrument.EURUSD
+Enter new Instrument (press Enter to keep current): Instrument.GBPUSD
+
+Step 2: Date Range
+----------------------------------------
+Enter start date and end date for the download.
+Current START_YEAR: 2005
+Enter START_YEAR (press Enter to keep current): 2015
+Current START_MONTH: 1
+Enter START_MONTH (1-12) (press Enter to keep current): 1
+Current START_DAY: 1
+Enter START_DAY (1-31) (press Enter to keep current): 1
+Current END_YEAR: 2026
+Enter END_YEAR (press Enter to keep current): 2025
+Current END_MONTH: 7
+Enter END_MONTH (1-12) (press Enter to keep current): 12
+Current END_DAY: 3
+Enter END_DAY (1-31) (press Enter to keep current): 31
+
+Step 3: Dukascopy Account Credentials
+----------------------------------------
+Current USERNAME: DEMO2YciXg
+Enter Dukascopy USERNAME (press Enter to keep current): 
+Current PASSWORD: YciXg
+Enter Dukascopy PASSWORD (press Enter to keep current): 
+
+============================================================
+Configuration Summary:
+============================================================
+  Instrument      : Instrument.GBPUSD
+  Start Date      : 2015-1-1
+  End Date        : 2025-12-31
+  Username        : DEMO2YciXg
+  Password        : ********
+
+Unchanged (Read-Only):
+  JNLP URL        : http://platform.dukascopy.com/demo_4/jforex_4.jnlp
+  Batch Years     : 3
+  Output Dir      : ./ohlcv_output/
+  Archive Dir     : ./archive/
+============================================================
+
+Do you want to apply these changes? (y/N): y
+
+Backing up original files...
+  -> Backup created: src/main/java/com/rws/dukas/JForex4Downloader.java.bak_20260709_120000
+  -> Backup created: src/main/java/com/rws/dukas/JForex4ArchiveAuditor.java.bak_20260709_120000
+
+Applying new configuration...
+All files updated successfully.
+
+Step 4: Compiling the project with new settings...
+[INFO] BUILD SUCCESS
+
+============================================================
+CONFIGURATION COMPLETE
+============================================================
+
+Your project is now configured for:
+  Symbol    : Instrument.GBPUSD
+  Date Range: 2015-1-1 to 2025-12-31
+
+To start the download, run:
+  mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4Downloader"
+```
+
+### What Happens Behind the Scenes
+
+1. The script reads your **current settings** from the Java files.
+2. It **prompts you** for new values — press Enter to keep the current value.
+3. It **validates** your inputs (months 1-12, days 1-31, 4-digit years).
+4. It displays a **summary** and asks for confirmation.
+5. It **creates backups** of the original Java files with a timestamp.
+6. It **updates both Java files** simultaneously.
+7. It **runs `mvn clean compile`** automatically.
+8. It displays **final instructions** for starting the download.
+
+### Restoring Previous Configuration
+
+If you made a mistake or want to revert:
+
+```bash
+cd ~/RWS-DUKAS-J4X
+
+# Find your backup files
+ls -la src/main/java/com/rws/dukas/*.bak_*
+
+# Restore (replace with your actual backup filename)
+cp src/main/java/com/rws/dukas/JForex4Downloader.java.bak_20260709_120000 src/main/java/com/rws/dukas/JForex4Downloader.java
+cp src/main/java/com/rws/dukas/JForex4ArchiveAuditor.java.bak_20260709_120000 src/main/java/com/rws/dukas/JForex4ArchiveAuditor.java
+
+# Recompile
 mvn clean compile
 ```
 
@@ -383,11 +543,11 @@ scp -r root@<YOUR_VPS_IP>:/root/RWS-DUKAS-J4X/archive/ C:\Users\YourName\Documen
 
 ### Error: "No ticks received"
 - Your demo account may have expired.
-- Go to Dukascopy, create a new demo account, and update `USERNAME` and `PASSWORD` in both Java files (see [How to Update Credentials](#how-to-update-credentials)).
+- Run `./configure.sh` and update your username and password with a new demo account from Dukascopy.
 
 ### Error: "Out of disk space"
 - The tool archives every 3 years and clears the working directory, so it never holds more than ~3 years of CSV files at once (about 450 MB).
-- If you have less than 450 MB free, reduce `BATCH_YEARS` to 1 or 2 in the code.
+- If you have less than 450 MB free, reduce `BATCH_YEARS` to 1 or 2 in the code (you'll need to edit the Java file manually for this).
 
 ### Error: "Maven not found" or "Java not found"
 - Install Java and Maven:
@@ -399,8 +559,13 @@ scp -r root@<YOUR_VPS_IP>:/root/RWS-DUKAS-J4X/archive/ C:\Users\YourName\Documen
 ### Error: "Permission denied" when running scripts
 - Make the scripts executable:
   ```bash
-  chmod +x start_fresh_download.sh reset_project.sh
+  chmod +x configure.sh start_fresh_download.sh reset_project.sh
   ```
+
+### Error: Invalid symbol name
+- If you get a compilation error after running `configure.sh`, you may have entered an invalid instrument name.
+- Check the list of valid instruments in the [Dukascopy API documentation](https://www.dukascopy.com/wiki/en/development/strategy-api/api-reference/com/dukascopy/api/Instrument.html).
+- Run `./configure.sh` again and correct the symbol.
 
 ---
 
@@ -420,9 +585,24 @@ Delete the lines for the months you want to re-download. Then run the downloader
 
 ## How to Clean Everything and Start Fresh
 
-There are **two scripts** for cleaning. Choose the one that fits your need:
+There are **three scripts** for cleaning. Choose the one that fits your need:
 
-### Script 1: `start_fresh_download.sh` — Reset + Compile + Start Download Automatically
+### Script 1: `configure.sh` — Change Settings (Does NOT Delete Data)
+
+```bash
+cd ~/RWS-DUKAS-J4X
+./configure.sh
+```
+
+**What it does:**
+- Prompts for new symbol, date range, and credentials.
+- Backs up and updates the Java files.
+- Compiles the project.
+- **Does NOT** delete any data.
+
+**Use this if:** You want to change the symbol, date range, or credentials without losing already-downloaded data.
+
+### Script 2: `start_fresh_download.sh` — Reset + Compile + Start Download Automatically
 
 ```bash
 cd ~/RWS-DUKAS-J4X
@@ -440,7 +620,7 @@ cd ~/RWS-DUKAS-J4X
 
 **Use this if:** You want a complete reset **and** want the downloader to start immediately.
 
-### Script 2: `reset_project.sh` — Reset + Compile (Does NOT Start Download)
+### Script 3: `reset_project.sh` — Reset + Compile (Does NOT Start Download)
 
 ```bash
 cd ~/RWS-DUKAS-J4X
@@ -459,7 +639,7 @@ cd ~/RWS-DUKAS-J4X
 
 **Use this if:** You want a clean slate but want to manually decide when to start the downloader (e.g., you want to run it in `screen` or `nohup` manually).
 
-### Warning for Both Scripts
+### Warning for Scripts 2 and 3
 
 **These scripts delete ALL downloaded data.** Use only if you want to start over from zero. If you have already downloaded data you want to keep, back up the `archive/` folder before running these scripts.
 
@@ -505,38 +685,16 @@ If a full month fails to download after 3 retry attempts, the tool enters **week
 
 ---
 
-## How to Update Credentials
-
-The tool uses demo credentials hardcoded in the Java files. If your demo account expires, update these values:
-
-**File 1:** `JForex4Downloader.java`
-```java
-private static final String USERNAME = "YOUR_NEW_USERNAME";
-private static final String PASSWORD = "YOUR_NEW_PASSWORD";
-```
-
-**File 2:** `JForex4ArchiveAuditor.java`
-```java
-private static final String USERNAME = "YOUR_NEW_USERNAME";
-private static final String PASSWORD = "YOUR_NEW_PASSWORD";
-```
-
-Then recompile:
-```bash
-mvn clean compile
-```
-
----
-
 ## Known Limitations
 
 | Limitation | Explanation |
 |------------|-------------|
 | **Datafeed endpoint** | The tool uses `datafeed.66proxymity88.net`, which is the **only** source for Dukascopy historical data. There is no alternative. |
 | **Network timeouts** | If your VPS has poor routing to Dukascopy's servers (e.g., from certain regions in Asia or the US), some months may still fail. The tool retries and uses weekly fallback, but extreme cases may require a VPN or moving your VPS to Europe. |
-| **Demo accounts expire** | The credentials are not permanent. You may need to renew them on the Dukascopy website every few months. |
+| **Demo accounts expire** | The credentials are not permanent. You may need to renew them on the Dukascopy website every few months. Use `./configure.sh` to update them easily. |
 | **`AV_SPREAD`** | Calculated from the ask and bid **close** prices of the minute bar, not from every individual tick. For most purposes, this is sufficient. |
 | **File size limit** | Terabox has a 2 GB per file limit. Do not zip the entire `archive/` folder into one file. Keep individual CSV files (< 20 MB each). |
+| **Instrument availability** | Not all instruments are available on demo accounts. Stick to major forex pairs (EURUSD, GBPUSD, USDJPY) for best results. |
 
 ---
 
@@ -552,11 +710,12 @@ This tool is designed to be **set and forget**. You run it once, wait, and come 
 
 **Summary of what you need to do:**
 
-1. **Build:** `mvn clean compile`
-2. **Run (background):** `screen -S dukas-download` then `mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4Downloader"`
-3. **Wait overnight.**
-4. **Run Archive Auditor:** `mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4ArchiveAuditor"`
-5. **Download to Mac:** `rsync -avz --progress root@<IP>:/root/RWS-DUKAS-J4X/archive/ ~/Documents/ForexData/`
+1. **(Optional) Configure:** `./configure.sh` to set symbol, date range, and credentials.
+2. **Build:** `mvn clean compile`
+3. **Run (background):** `screen -S dukas-download` then `mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4Downloader"`
+4. **Wait overnight.**
+5. **Run Archive Auditor:** `mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4ArchiveAuditor"`
+6. **Download to Mac:** `rsync -avz --progress root@<IP>:/root/RWS-DUKAS-J4X/archive/ ~/Documents/ForexData/`
 
 That's it. Everything else is automatic.
 
@@ -564,16 +723,15 @@ If you encounter any issues, check the logs (see "How to Read Logs" above) and c
 
 ---
 
-**Version 2.2.0** — Reliable, automated, and fully documented.
+**Version 3.0.0** — Reliable, automated, and fully documented.
 
-**Key improvements in 2.2.0:**
-- Added `reset_project.sh` (clean reset without auto-start).
-- Clarified the difference between `start_fresh_download.sh` and `reset_project.sh`.
-- Expanded the "How to Clean Everything" section.
-- Added detailed explanations of `BATCH_YEARS` and weekly fallback.
-- Added "Quick Start" section for impatient users.
-- Added complete table of contents.
-- Updated all examples and command references.
+**Key improvements in 3.0.0:**
+- Added `configure.sh` — interactive configuration tool for symbol, date range, and credentials.
+- Simplified configuration process — users only need to answer 9 simple questions.
+- JNLP_URL, BATCH_YEARS, OUTPUT_DIR, and ARCHIVE_BASE_DIR are now read-only (shown for information, not modified).
+- The script validates all inputs (months 1-12, days 1-31, 4-digit years).
+- Automatic backup of original files before making changes.
+- Automatic compilation after configuration.
+- Clear separation between "user‑changeable" and "system‑readonly" settings.
 
----
 ```

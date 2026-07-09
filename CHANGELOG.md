@@ -4,6 +4,124 @@ All notable changes to this project are documented in this file.
 
 ---
 
+## [3.0.0] - 2026-07-09
+
+### Added
+
+- **`configure.sh` — Interactive Configuration Tool**
+  - A user-friendly, interactive Bash script that simplifies changing the instrument symbol, date range, and Dukascopy account credentials.
+  - **No manual code editing required** — the script handles all file updates automatically.
+  - Validates all user inputs: months (1-12), days (1-31), and years (4-digit format).
+  - Displays current settings before prompting for new values.
+  - Allows users to press `Enter` to keep the current value for any setting.
+  - Creates timestamped backups of both Java files before applying changes.
+  - Automatically compiles the project after configuration (`mvn clean compile`).
+  - Provides clear, color-coded feedback for every step.
+  - Shows a summary of changes before asking for confirmation.
+
+- **Read-Only System Settings Display**
+  - The `configure.sh` script now displays the following settings as **read-only information**:
+    - `JNLP_URL` — Dukascopy connection endpoint (rarely changes)
+    - `BATCH_YEARS` — Archiving interval (3 years by default)
+    - `OUTPUT_DIR` — Temporary working directory
+    - `ARCHIVE_BASE_DIR` — Archive destination folder
+  - These values are shown for reference but **not modified** by the script.
+  - Users only need to focus on what they actually care about: symbol, date range, and credentials.
+
+- **User-Configurable Settings (9 Simple Questions)**
+  - The script now prompts for only **9 essential settings**:
+    1. Instrument (Symbol) — e.g., `Instrument.GBPUSD`
+    2. Start Year — e.g., `2010`
+    3. Start Month — `1-12`
+    4. Start Day — `1-31`
+    5. End Year — e.g., `2025`
+    6. End Month — `1-12`
+    7. End Day — `1-31`
+    8. Dukascopy Username
+    9. Dukascopy Password
+  - This simplifies the configuration process and reduces user confusion.
+
+- **Input Validation**
+  - The script now validates all numeric inputs:
+    - Month must be between 1 and 12.
+    - Day must be between 1 and 31.
+    - Year must be exactly 4 digits.
+  - Invalid inputs trigger an error message and re-prompt for the correct value.
+  - Prevents compilation errors caused by invalid date values.
+
+- **Automatic Backup System**
+  - Before applying any changes, the script creates backups of both Java files:
+    - `JForex4Downloader.java.bak_YYYYMMDD_HHMMSS`
+    - `JForex4ArchiveAuditor.java.bak_YYYYMMDD_HHMMSS`
+  - Backups are timestamped, so multiple backups can coexist.
+  - Users can easily restore previous configurations if needed.
+
+- **Post-Configuration Auto-Compilation**
+  - After successfully applying new settings, the script automatically runs `mvn clean compile`.
+  - Ensures that the project is immediately ready to run with the new configuration.
+  - Eliminates the "I forgot to compile" problem.
+
+### Changed
+
+- **README.md Complete Overhaul for v3.0.0**
+  - Added a new "How to Configure — NEW!" section with detailed `configure.sh` usage instructions.
+  - Reorganized the Table of Contents to include the new configuration section.
+  - Updated the Quick Start guide to include `./configure.sh` as an optional first step.
+  - Added a "What You DON'T Need to Change" section to clarify which settings are read-only.
+  - Enhanced the "How to Handle Errors" section with specific guidance for invalid symbol names.
+  - Updated the "How to Clean Everything and Start Fresh" section to include `configure.sh` as a data-preserving option.
+  - Added a "Restoring Previous Configuration" subsection with clear restoration steps.
+  - Updated the final summary to reflect the new workflow: Configure → Build → Run.
+
+- **CHANGELOG.md Updated**
+  - Added the new `[3.0.0]` entry at the top with comprehensive details.
+  - Preserved all previous version history below.
+
+- **Project Focus Realignment**
+  - The project now prioritizes **user experience** and **accessibility** over raw technical complexity.
+  - Configuration is now a first-class feature, not an afterthought.
+  - The tool is now approachable for non-developers who just want to download data.
+
+### Fixed
+
+- **No manual code editing required**
+  - Previously, users had to manually edit Java files to change symbols, dates, or credentials.
+  - This was error-prone and intimidating for non-developers.
+  - The new `configure.sh` script eliminates this entirely.
+
+- **Reduced user error**
+  - Previously, users could enter invalid dates (e.g., month 13) and cause compilation failures.
+  - The script now validates all inputs and prevents invalid values from being saved.
+
+- **No more forgotten compilation steps**
+  - Previously, users would change Java files and forget to run `mvn clean compile`.
+  - The script now automatically compiles the project after every configuration change.
+
+### Removed
+
+- **Manual "How to Update Credentials" guidance**
+  - The README previously had a section on manually editing Java files for credentials.
+  - This has been replaced with the `./configure.sh` approach, which is simpler and safer.
+
+### Known Limitations (as of 3.0.0)
+
+- **Datafeed endpoint** — The tool uses `datafeed.66proxymity88.net`, which is the **only** source for Dukascopy historical data. There is no alternative.
+- **Network timeouts** — If your VPS has poor routing to Dukascopy's servers, some months may still fail. The tool's retry logic and weekly fallback mitigate this, but extreme cases may require a VPN or moving your VPS to Europe.
+- **Demo accounts expire** — The credentials are not permanent. You may need to renew them on the Dukascopy website every few months. Use `./configure.sh` to update them easily.
+- **`AV_SPREAD`** — Calculated from the ask and bid **close** prices of the minute bar, not from every individual tick. For most purposes, this is sufficient.
+- **File size limit** — Terabox has a 2 GB per file limit. Do not zip the entire `archive/` folder into one file. Keep individual CSV files (< 20 MB each).
+- **Instrument availability** — Not all instruments are available on demo accounts. Stick to major forex pairs (EURUSD, GBPUSD, USDJPY) for best results.
+
+### Planned
+
+- **Multi‑instrument support** — Currently only EUR/USD is tested. Future versions may allow downloading other instruments (e.g., GBP/USD, USD/JPY) by changing the `INSTRUMENT` constant.
+- **GUI progress dashboard** — A simple terminal‑based progress bar showing current month, success/failure rates, and estimated time remaining.
+- **Auto‑retry on startup** — If the downloader detects that some months are `FAILED` in the master progress file, it could automatically retry them without waiting for the Phase 2 backfill pass.
+- **Compressed archive output** — Option to output CSV files in `.gz` or `.zip` format to save even more storage space.
+- **Webhook notifications** — Send a notification (e.g., to Discord or Telegram) when the download completes or when a month fails permanently.
+
+---
+
 ## [2.2.0] - 2026-07-09
 
 ### Added
@@ -234,6 +352,7 @@ All notable changes to this project are documented in this file.
 
 | Version | Date | Key Focus |
 |---------|------|-----------|
+| **3.0.0** | 2026-07-09 | Added `configure.sh` — interactive configuration tool. Simplified user experience with only 9 essential questions. Read-only display of system settings. Input validation. Auto-backup. Auto-compilation. |
 | **2.2.0** | 2026-07-09 | Added `reset_project.sh`, comprehensive README overhaul, detailed explanations of archiving and fallback logic |
 | **2.1.0** | 2026-07-08 | Platform-specific data transfer guide, improved documentation clarity |
 | **2.0.0** | 2026-07-08 | Complete rewrite: JForex 4 API, batch archiving, Archive Auditor, master progress, retry logic, weekly fallback |
@@ -241,4 +360,4 @@ All notable changes to this project are documented in this file.
 
 ---
 
-**Note:** Version 2.0.0 was a **major rewrite** that replaced the old `ITesterClient`-based downloader. Version 2.1.0 added the data transfer guide. Version 2.2.0 rounds out the documentation and adds the `reset_project.sh` script for clean slate management. All users are strongly encouraged to use version 2.2.0 or later for the best experience.
+**Note:** Version 3.0.0 marks a significant milestone in **user experience** — configuration is now as simple as answering 9 questions. No more manual code editing, no more forgotten compilation steps, and no more invalid date entries. All users are strongly encouraged to use version 3.0.0 or later for the best experience.
