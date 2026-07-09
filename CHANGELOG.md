@@ -4,6 +4,87 @@ All notable changes to this project are documented in this file.
 
 ---
 
+## [2.2.0] - 2026-07-09
+
+### Added
+
+- **`reset_project.sh` — New clean-slate reset script**
+  - A dedicated script that performs a complete project reset **without** automatically starting the downloader.
+  - Stops all running JForex processes.
+  - Deletes all CSV files from `ohlcv_output/` and `archive/`.
+  - Deletes the master progress file (`.master_download_progress.txt`).
+  - Empties the system Trash/Recycle Bin.
+  - Clears JForex cache (`/root/JForex/cache`, `/root/JForex/data`, `/root/JForex/tmp`).
+  - Recompiles the project (`mvn clean compile`).
+  - Does **not** start the downloader automatically, giving you full control to run it manually (e.g., inside `screen` or `tmux`).
+  - Includes safety checks: verifies the project directory exists and Maven is installed before proceeding.
+  - Provides clear, color-coded feedback for each step.
+
+- **Comprehensive Table of Contents in README**
+  - The `README.md` now includes a full table of contents with 20 sections.
+  - Allows users to quickly jump to any topic without scrolling through the entire document.
+  - Improves navigation and discoverability.
+
+- **"Quick Start" section in README**
+  - A concise, 5‑step guide for impatient users who just want to get the tool running immediately.
+  - Covers compilation, running in `screen`, detaching, and re-attaching.
+  - Reduces friction for first-time users.
+
+- **Detailed explanation of `BATCH_YEARS` logic**
+  - The README now includes a full explanation of how the 3‑year archiving system works.
+  - Describes why 3 years was chosen (450 MB per batch) and how to change it.
+  - Helps users understand and customize the archiving behavior.
+
+- **Detailed explanation of weekly fallback mechanism**
+  - The README now explains how the tool splits a failed month into 7‑day chunks.
+  - Describes why this works (smaller payloads = faster transfers = fewer timeouts).
+  - Gives users confidence in the tool's resilience.
+
+- **"How to Update Credentials" section in README**
+  - Step‑by‑step guide for updating the `USERNAME` and `PASSWORD` constants in both Java files.
+  - Includes exact file names and line locations.
+  - Saves users from hunting through code to find where credentials are stored.
+
+### Changed
+
+- **README restructuring**
+  - The main documentation has been completely reorganized for better flow and readability.
+  - Added a clear distinction between `start_fresh_download.sh` and `reset_project.sh` — two scripts that serve different purposes.
+  - Expanded all sections with more detailed examples and explanations.
+  - Added more troubleshooting entries (e.g., "Maven not found", "Java version mismatch", "Permission denied").
+  - Updated all command references to be consistent with the new project structure.
+
+- **CHANGELOG restructuring**
+  - The `CHANGELOG.md` now follows the [Keep a Changelog](https://keepachangelog.com/) format more strictly.
+  - Added clearer section headers (`### Added`, `### Changed`, `### Fixed`, `### Removed`) for every version.
+  - Improved the readability and consistency of all entries.
+
+- **`start_fresh_download.sh` improvements**
+  - The existing script has been refined with additional safety checks.
+  - It now checks that the project directory exists and that Maven is installed.
+  - Improved error messages and color-coded output.
+  - The script still performs the full reset and automatically starts the downloader, but now handles edge cases more gracefully.
+
+### Fixed
+
+- **Missing error handling in scripts**
+  - Both `reset_project.sh` and `start_fresh_download.sh` now check if the project directory exists before attempting to `cd` into it.
+  - Both scripts now check if Maven is installed before running `mvn clean compile`.
+  - Prevents cryptic error messages and provides clear guidance when dependencies are missing.
+
+- **README inconsistencies**
+  - Fixed outdated references to `start_fresh_download.sh` where `reset_project.sh` should have been mentioned.
+  - Corrected command examples that were not fully accurate.
+  - Updated the file structure diagram to reflect the addition of `reset_project.sh`.
+
+### Removed
+
+- **Redundant instructions in README**
+  - Streamlined sections that were previously duplicated across the document.
+  - Consolidated overlapping explanations (e.g., "How to Run" and "How to Run in Background" are now clearly separate but cross‑referenced).
+
+---
+
 ## [2.1.0] - 2026-07-08
 
 ### Added
@@ -99,7 +180,7 @@ All notable changes to this project are documented in this file.
 
 - `ohlcv_output/.download_progress.txt` — Replaced by `.master_download_progress.txt` in the project root.
 
-### Known Limitations
+### Known Limitations (as of 2.0.0)
 
 - **Historical datafeed endpoint** — All tools (including this one) use the same Dukascopy datafeed endpoint (`datafeed.66proxymity88.net`). There is no alternative. If your VPS has poor routing to this endpoint, you may still experience sporadic timeouts. The tool's retry logic mitigates this, but extreme network conditions may cause some months to remain `FAILED`.
 
@@ -109,7 +190,7 @@ All notable changes to this project are documented in this file.
 
 - **Storage** — While the tool archives every 3 years, the `archive/` folder will eventually contain all 21 years of data (~3 GB total). This is well within 256 GB of storage, but you may want to migrate older batches to a local machine if storage is a concern.
 
-### Planned
+### Planned (as of 2.0.0)
 
 - **Multi‑instrument support** — Currently only EUR/USD is tested. Future versions may allow downloading other instruments (e.g., GBP/USD, USD/JPY) by changing the `INSTRUMENT` constant.
 
@@ -125,7 +206,7 @@ All notable changes to this project are documented in this file.
 
 ## [1.0.0] - 2026-07-08 (Previous Version)
 
-### Added (v1.0.0)
+### Added
 
 - Live tick capture strategy (`singlejartest.LiveCaptureStrategy`)
 - Historical downloader using `ITesterClient` (`DukascopyHistoricalDownloader.java`)
@@ -133,7 +214,7 @@ All notable changes to this project are documented in this file.
 - Official Dukascopy examples (`Main.java`, `MA_Play.java`)
 - Maven build with fat JAR support
 
-### Fixed (v1.0.0)
+### Fixed
 
 - `Period` class ambiguity (explicit imports)
 - `startStrategy` signature mismatches
@@ -149,4 +230,15 @@ All notable changes to this project are documented in this file.
 
 ---
 
-**Note:** Version 2.0.0 was a **major rewrite** that replaced the old `ITesterClient`-based downloader. Version 2.1.0 keeps all that solid work intact but adds a much-needed, practical guide to actually getting the data onto your own computer.
+## Summary of Major Releases
+
+| Version | Date | Key Focus |
+|---------|------|-----------|
+| **2.2.0** | 2026-07-09 | Added `reset_project.sh`, comprehensive README overhaul, detailed explanations of archiving and fallback logic |
+| **2.1.0** | 2026-07-08 | Platform-specific data transfer guide, improved documentation clarity |
+| **2.0.0** | 2026-07-08 | Complete rewrite: JForex 4 API, batch archiving, Archive Auditor, master progress, retry logic, weekly fallback |
+| **1.0.0** | 2026-07-08 | Initial release with live capture and basic historical downloader (ITesterClient) |
+
+---
+
+**Note:** Version 2.0.0 was a **major rewrite** that replaced the old `ITesterClient`-based downloader. Version 2.1.0 added the data transfer guide. Version 2.2.0 rounds out the documentation and adds the `reset_project.sh` script for clean slate management. All users are strongly encouraged to use version 2.2.0 or later for the best experience.

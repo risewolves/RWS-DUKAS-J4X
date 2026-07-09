@@ -37,12 +37,12 @@ public class JForex4ArchiveAuditor {
     private static final String PASSWORD = "YciXg";
     private static final String JNLP_URL = "http://platform.dukascopy.com/demo_4/jforex_4.jnlp";
 
-    private static final Instrument INSTRUMENT = Instrument.EURUSD;
+    private static final Instrument INSTRUMENT = Instrument.XAUUSD;
     private static final String OUTPUT_DIR = "./ohlcv_output/";
     private static final String ARCHIVE_BASE_DIR = "./archive/";
     private static final String MASTER_PROGRESS_FILE = "./.master_download_progress.txt";
 
-    private static final int START_YEAR = 2005;
+    private static final int START_YEAR = 2009;
     private static final int START_MONTH = 1;
     private static final int START_DAY = 1;
     private static final int END_YEAR = 2026;
@@ -208,7 +208,7 @@ public class JForex4ArchiveAuditor {
 
     // ==================== CHECK ARCHIVE FILE ====================
     private static boolean checkArchiveFile(String monthKey) {
-        String fileName = "EURUSD_" + monthKey + "_1min_OHLCV.csv";
+        String fileName = "XAUUSD_" + monthKey + "_1min_OHLCV.csv";
         int year = Integer.parseInt(monthKey.substring(0, 4));
 
         // Determine correct archive folder
@@ -282,7 +282,7 @@ public class JForex4ArchiveAuditor {
 
     // ==================== MOVE SINGLE FILE TO ARCHIVE ====================
     private static void moveSingleFileToArchive(String monthKey) {
-        String fileName = "EURUSD_" + monthKey + "_1min_OHLCV.csv";
+        String fileName = "XAUUSD_" + monthKey + "_1min_OHLCV.csv";
         Path src = Paths.get(OUTPUT_DIR, fileName);
         if (!Files.exists(src)) return;
 
@@ -317,7 +317,7 @@ public class JForex4ArchiveAuditor {
     // ==================== PROCESS MONTH WITH RETRY (COPY PASTE) ====================
     private static boolean processMonthWithRetry(IHistory history, int year, int month) {
         String monthStr = String.format("%04d-%02d", year, month);
-        String outputFile = OUTPUT_DIR + "EURUSD_" + monthStr + "_1min_OHLCV.csv";
+        String outputFile = OUTPUT_DIR + "XAUUSD_" + monthStr + "_1min_OHLCV.csv";
 
         LocalDateTime startLdt = LocalDateTime.of(year, month, 1, 0, 0, 0);
         LocalDateTime endLdt;
