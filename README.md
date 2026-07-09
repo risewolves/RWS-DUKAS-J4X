@@ -1,6 +1,6 @@
 # RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v3.0.0)
 
-**Version 3.0.0** — A complete, self-contained, and fully documented tool to download 21 years of EUR/USD tick data from Dukascopy and convert it into monthly 1‑minute OHLCV CSV files. Now includes an **interactive configuration script** that makes it trivially easy to change symbols, date ranges, and credentials.
+**Version 3.0.0** — A complete, self-contained, and fully documented tool to download decades of tick data from Dukascopy and convert it into monthly 1‑minute OHLCV CSV files. Now includes an **interactive configuration script** that makes it trivially easy to change symbols, date ranges, and credentials — no manual code editing required.
 
 ---
 
@@ -9,21 +9,24 @@
 If you just want to get it running right now:
 
 ```bash
-# 1. Clone or navigate to the project
+# 1. Navigate to the project
 cd ~/RWS-DUKAS-J4X
 
-# 2. (Optional) Configure symbol, date range, and credentials
+# 2. Make scripts executable (first time only)
+chmod +x configure.sh start_fresh_download.sh reset_project.sh
+
+# 3. (Optional) Configure symbol, date range, and credentials
 ./configure.sh
 
-# 3. Compile
+# 4. Compile
 mvn clean compile
 
-# 4. Run in background (screen)
+# 5. Run in background (screen)
 screen -S dukas-download
 mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4Downloader"
 # Press Ctrl+A, then D to detach
 
-# 5. Check progress later
+# 6. Check progress later
 screen -r dukas-download
 ```
 
@@ -50,9 +53,10 @@ That's it. The tool will download all months from your configured start date to 
 15. [How to Clean Everything and Start Fresh](#how-to-clean-everything-and-start-fresh)
 16. [How the Archiving Logic Works (BATCH_YEARS)](#how-the-archiving-logic-works-batch_years)
 17. [How the Weekly Fallback Works](#how-the-weekly-fallback-works)
-18. [Known Limitations](#known-limitations)
-19. [License](#license)
-20. [Final Thoughts](#final-thoughts)
+18. [Common Instruments (Symbols)](#common-instruments-symbols)
+19. [Known Limitations](#known-limitations)
+20. [License](#license)
+21. [Final Thoughts](#final-thoughts)
 
 ---
 
@@ -94,9 +98,9 @@ DATETIME,OPEN,HIGH,LOW,CLOSED,AV_SPREAD,VOLUME
 2005-01-02 22:00:00,1.35480,1.35490,1.35464,1.35480,0.00010,103.3
 ```
 
-Files are named: `EURUSD_YYYY-MM_1min_OHLCV.csv`
+Files are named: `SYMBOL_YYYY-MM_1min_OHLCV.csv` (e.g., `GBPUSD_2015-01_1min_OHLCV.csv`)
 
-Each file is typically **5–15 MB** depending on the month (more trading days = larger file). The entire 21‑year dataset is about **3 GB**.
+Each file is typically **5–15 MB** depending on the month (more trading days = larger file). The entire 21‑year dataset for EUR/USD is about **3 GB**.
 
 ---
 
@@ -107,9 +111,10 @@ Each file is typically **5–15 MB** depending on the month (more trading days =
 | **Java** | 21 (OpenJDK or Oracle) | `sudo apt install openjdk-21-jdk` |
 | **Maven** | 3.6+ | `sudo apt install maven` |
 | **screen** (recommended for background) | Any | `sudo apt install screen` |
+| **Script Permissions** | — | `chmod +x configure.sh start_fresh_download.sh reset_project.sh` |
 | **Dukascopy demo account** | Active | [Create one here](https://www.dukascopy.com) |
 
-The code includes demo credentials (`DEMO2YciXg` / `YciXg`), but they may expire. If you see connection errors, create a new demo account and update the credentials using `./configure.sh` (see the next section).
+The code includes demo credentials (`DEMO2YciXg` / `YciXg`), but they may expire. If you see connection errors, create a new demo account and update the credentials using `./configure.sh` (see the [How to Configure](#how-to-configure-new) section).
 
 ---
 
@@ -685,6 +690,29 @@ If a full month fails to download after 3 retry attempts, the tool enters **week
 
 ---
 
+## Common Instruments (Symbols)
+
+Here are the most common instruments available on Dukascopy demo accounts:
+
+| Symbol | Instrument Enum | Description |
+|--------|-----------------|-------------|
+| EUR/USD | `Instrument.EURUSD` | Euro / US Dollar |
+| GBP/USD | `Instrument.GBPUSD` | British Pound / US Dollar |
+| USD/JPY | `Instrument.USDJPY` | US Dollar / Japanese Yen |
+| AUD/USD | `Instrument.AUDUSD` | Australian Dollar / US Dollar |
+| USD/CHF | `Instrument.USDCHF` | US Dollar / Swiss Franc |
+| USD/CAD | `Instrument.USDCAD` | US Dollar / Canadian Dollar |
+| NZD/USD | `Instrument.NZDUSD` | New Zealand Dollar / US Dollar |
+| EUR/JPY | `Instrument.EURJPY` | Euro / Japanese Yen |
+| GBP/JPY | `Instrument.GBPJPY` | British Pound / Japanese Yen |
+| XAU/USD | `Instrument.XAUUSD` | Gold / US Dollar |
+| XAG/USD | `Instrument.XAGUSD` | Silver / US Dollar |
+| BTC/USD | `Instrument.BTCUSD` | Bitcoin / US Dollar |
+
+**Note:** Not all instruments are available on demo accounts. Stick to major forex pairs for the best results.
+
+---
+
 ## Known Limitations
 
 | Limitation | Explanation |
@@ -733,5 +761,7 @@ If you encounter any issues, check the logs (see "How to Read Logs" above) and c
 - Automatic backup of original files before making changes.
 - Automatic compilation after configuration.
 - Clear separation between "user‑changeable" and "system‑readonly" settings.
-
+- Added chmod step to Quick Start and Prerequisites — no more "Permission denied" errors.
 ```
+
+---
