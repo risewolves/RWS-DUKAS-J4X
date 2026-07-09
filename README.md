@@ -1,19 +1,3 @@
-## EXECUTIVE SUMMARY — KONSORTIUM
-
-**STATUS: FULL README.MD — VERSION 3.1.0 (COMPLETE)**
-
-Below is the **entire README.md** file for version 3.1.0. This version incorporates all the recent critical fixes:
-
-1. **Dynamic Filename Generation** — CSV files now use `INSTRUMENT.name()` (e.g., `GBPUSD_2005-01_1min_OHLCV.csv`), not hardcoded "EURUSD" or "BTCUSD".
-2. **Improved `configure.sh`** — now validates instrument input, rejects commas/spaces, automatically adds `Instrument.` prefix, and offers to auto-start the download after configuration.
-3. **Enhanced `reset_project.sh`** — now removes `.bak_*` backup files and cleans the `logs/` folder.
-4. **Updated `JForex4ArchiveAuditor.java`** — now uses dynamic filenames for archive verification.
-
-All sections have been reviewed and updated to reflect these changes.
-
----
-
-```markdown
 # RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v3.1.0)
 
 **Version 3.1.0** — A complete, self-contained, and fully documented tool to download decades of tick data from Dukascopy and convert it into monthly 1‑minute OHLCV CSV files. Now with **dynamic filenames** that automatically match your chosen instrument, and enhanced reset and configuration scripts for a smoother experience.
