@@ -42,7 +42,7 @@ public class JForex4ArchiveAuditor {
     private static final String ARCHIVE_BASE_DIR = "./archive/";
     private static final String MASTER_PROGRESS_FILE = "./.master_download_progress.txt";
 
-    private static final int START_YEAR = 2009;
+    private static final int START_YEAR = 2005;
     private static final int START_MONTH = 1;
     private static final int START_DAY = 1;
     private static final int END_YEAR = 2026;
