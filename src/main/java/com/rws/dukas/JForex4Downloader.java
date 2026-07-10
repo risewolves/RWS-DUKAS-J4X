@@ -47,7 +47,7 @@ public class JForex4Downloader {
     private static final int START_DAY = 1;
     private static final int END_YEAR = 2026;
     private static final int END_MONTH = 7;
-    private static final int END_DAY = 7;
+    private static final int END_DAY = 8;
 
     private static final int BATCH_YEARS = 3;
     private static final int MAX_RETRIES = 3;
