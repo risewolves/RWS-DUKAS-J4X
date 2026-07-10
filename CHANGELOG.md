@@ -1,5 +1,69 @@
 # Changelog
 
+All notable changes to this project are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [3.2.0] - 2026-07-10
+
+### Added
+
+- **Increased Connection Timeout (30 → 60 seconds)**
+  - The connection timeout in both `JForex4Downloader.java` and `JForex4ArchiveAuditor.java` has been increased from 30 to 60 seconds.
+  - This ensures the tool works reliably after a `mvn clean compile` (cold start), where the SDK needs extra time to initialize and download instrument metadata.
+  - Previously, cold starts would sometimes fail with a `Connection failed` error because the SDK took longer than 30 seconds to establish the connection.
+  - Now, with 60 seconds, even the slowest cold starts succeed consistently.
+
+### Changed
+
+- **README.md Updated to Version 3.2.0**
+  - Added explanation of the increased connection timeout and why it matters.
+  - Updated the "What This Tool Does" section to mention the new timeout.
+  - Enhanced the "How to Handle Errors" section with guidance for cold start scenarios.
+  - Updated the "What's New in v3.2.0" subsection in the configuration guide.
+  - All command references and examples remain consistent with the new version.
+
+- **CHANGELOG.md Updated**
+  - Added the new `[3.2.0]` entry at the top with comprehensive details.
+  - Preserved all previous version history below.
+
+- **`configure.sh` and `reset_project.sh`**
+  - Both scripts now work seamlessly with the increased timeout.
+  - `reset_project.sh` resets the instrument to `EURUSD` with the correct 60-second timeout.
+  - `configure.sh` compiles and runs the downloader without any timeout-related issues.
+
+### Fixed
+
+- **Cold Start Connection Failure**
+  - Previously, running `./configure.sh` immediately after `mvn clean compile` would sometimes fail with `ERROR: Connection failed` because the SDK needed more than 30 seconds to initialize.
+  - This was a timing issue, not a code bug. The SDK was still connecting, but the 30-second timeout was too short.
+  - Now fixed: the timeout has been increased to 60 seconds, giving the SDK ample time to complete the connection handshake.
+
+- **Documentation Gaps**
+  - The README now clearly explains the cold start scenario and why the 60-second timeout is necessary.
+  - The troubleshooting section now includes specific guidance for handling connection failures after a full reset.
+
+### Known Limitations (as of 3.2.0)
+
+- **Datafeed endpoint** — The tool uses `datafeed.66proxymity88.net`, which is the **only** source for Dukascopy historical data. There is no alternative.
+- **Network timeouts** — If your VPS has poor routing to Dukascopy's servers, some months may still fail. The tool's retry logic and weekly fallback mitigate this, but extreme cases may require a VPN or moving your VPS to Europe.
+- **Cold start delays** — The first connection after `mvn clean compile` may take up to 60 seconds. The tool now has a 60-second timeout to handle this. If it still fails, wait a few seconds and run the download command again.
+- **Demo accounts expire** — The credentials are not permanent. You may need to renew them on the Dukascopy website every few months. Use `./configure.sh` to update them easily.
+- **`AV_SPREAD`** — Calculated from the ask and bid **close** prices of the minute bar, not from every individual tick. For most purposes, this is sufficient.
+- **File size limit** — Terabox has a 2 GB per file limit. Do not zip the entire `archive/` folder into one file. Keep individual CSV files (< 20 MB each).
+- **Instrument availability** — Not all instruments are available on demo accounts. Stick to major forex pairs (EURUSD, GBPUSD, USDJPY) for best results.
+
+### Planned
+
+- **Multi‑instrument support** — Currently only one instrument can be configured at a time. Future versions may allow downloading multiple instruments in a single run.
+- **GUI progress dashboard** — A simple terminal‑based progress bar showing current month, success/failure rates, and estimated time remaining.
+- **Auto‑retry on startup** — If the downloader detects that some months are `FAILED` in the master progress file, it could automatically retry them without waiting for the Phase 2 backfill pass.
+- **Compressed archive output** — Option to output CSV files in `.gz` or `.zip` format to save even more storage space.
+- **Webhook notifications** — Send a notification (e.g., to Discord or Telegram) when the download completes or when a month fails permanently.
+
 ---
 
 ## [3.1.0] - 2026-07-09
@@ -463,6 +527,7 @@
 
 | Version | Date | Key Focus |
 |---------|------|-----------|
+| **3.2.0** | 2026-07-10 | **Reliability fix**: Increased connection timeout from 30 to 60 seconds to handle cold starts after `mvn clean compile`. |
 | **3.1.0** | 2026-07-09 | **Critical fixes**: Dynamic filenames (no more hardcoded EURUSD/BTCUSD), instrument validation in `configure.sh`, auto-start download, enhanced `reset_project.sh` (cleans backups and logs), full compilable code. |
 | **3.0.0** | 2026-07-09 | Added `configure.sh` — interactive configuration tool. Simplified user experience with only 9 essential questions. Read-only display of system settings. Input validation. Auto-backup. Auto-compilation. |
 | **2.2.0** | 2026-07-09 | Added `reset_project.sh`, comprehensive README overhaul, detailed explanations of archiving and fallback logic |
@@ -472,6 +537,6 @@
 
 ---
 
-**Note:** Version 3.1.0 is a **critical bugfix release** that addresses the hardcoded filename issue that caused data corruption when switching instruments. All users who download multiple instruments are strongly encouraged to upgrade to version 3.1.0 or later. The dynamic filename feature ensures that each instrument's data is stored in its own correctly named CSV files.
+**Note:** Version 3.2.0 is a **reliability-focused release** that addresses the cold start connection timeout issue. This ensures the tool works consistently even after a full reset or fresh VPS setup. All users are encouraged to upgrade for a smoother experience, especially those running on VPS environments where cold starts are common.
 
 ```

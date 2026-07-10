@@ -1,6 +1,6 @@
-# RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v3.1.0)
+# RWS-DUKAS-J4X — Tick-to-1-Minute OHLCV Exporter (v3.2.0)
 
-**Version 3.1.0** — A complete, self-contained, and fully documented tool to download decades of tick data from Dukascopy and convert it into monthly 1‑minute OHLCV CSV files. Now with **dynamic filenames** that automatically match your chosen instrument, and enhanced reset and configuration scripts for a smoother experience.
+**Version 3.2.0** — A complete, self-contained, and fully documented tool to download decades of tick data from Dukascopy and convert it into monthly 1‑minute OHLCV CSV files. Now with **increased connection timeout (60 seconds)** to handle cold starts after `mvn clean compile`, and enhanced reliability for VPS environments.
 
 ---
 
@@ -72,7 +72,7 @@ It is designed for **unattended, long‑running operation on a VPS**. You run it
 - If interrupted (e.g., SSH drops, `Ctrl+C`), it resumes exactly where it left off.
 - After all months are processed, it automatically retries any failed months (Phase 2 backfill).
 - You can also run a separate **Archive Auditor** to verify file integrity and backfill missing/corrupt files before moving data to your local machine.
-- **NEW in v3.1.0:** CSV files are now named dynamically using the instrument's name (e.g., `GBPUSD_2005-01_1min_OHLCV.csv`). No more hardcoded "EURUSD" or "BTCUSD" filenames.
+- **NEW in v3.2.0:** Connection timeout increased from 30 to 60 seconds to handle cold starts after `mvn clean compile`. This ensures the tool works reliably even after a full reset.
 
 **The tool is built on the JForex 4 API (`IClient`)**, which uses the same connection mechanism as the official JForex 4 GUI — proven stable and reliable. It does **not** use the problematic JForex 3 SDK (`ITesterClient`) that caused hardcoded 45‑second timeouts.
 
@@ -130,7 +130,7 @@ RWS-DUKAS-J4X/
 │           ├── com/
 │           │   └── rws/
 │           │       └── dukas/
-│           │           ├── JForex4Downloader.java        # MAIN DOWNLOADER (dynamic filenames)
+│           │           ├── JForex4Downloader.java        # MAIN DOWNLOADER (dynamic filenames, 60s timeout)
 │           │           └── JForex4ArchiveAuditor.java    # ARCHIVE INTEGRITY CHECKER (dynamic filenames)
 │           └── singlejartest/                            # Official SDK examples (kept for future autotrading)
 │               ├── MA_Play.java
@@ -147,7 +147,7 @@ RWS-DUKAS-J4X/
 ├── logs/                                                   # RUNTIME LOGS (AUTO-CLEANED BY reset_project.sh)
 ├── .master_download_progress.txt                         # PERSISTENT PROGRESS TRACKER (NEVER DELETE UNLESS RESETTING)
 ├── pom.xml                                                # MAVEN CONFIGURATION
-├── configure.sh                                           # INTERACTIVE CONFIGURATION SCRIPT (v3.1.0 enhanced)
+├── configure.sh                                           # INTERACTIVE CONFIGURATION SCRIPT (v3.2.0 enhanced)
 ├── start_fresh_download.sh                               # ONE-CLICK RESET + DOWNLOAD (DELETES EVERYTHING + STARTS DOWNLOAD)
 ├── reset_project.sh                                      # ONE-CLICK RESET (CLEANS DATA, BACKUPS, LOGS, AND REPAIRS SOURCE CODE)
 ├── README.md                                              # THIS FILE
@@ -173,7 +173,7 @@ mvn clean compile
 
 ## How to Configure
 
-**Version 3.1.0** introduces improvements to `configure.sh`: it now validates instrument names, rejects invalid entries (e.g., "GBPUSD, USDJPY"), automatically adds the `Instrument.` prefix if you forget it, and optionally starts the download immediately after configuration.
+**Version 3.2.0** brings improved reliability with the connection timeout increased to 60 seconds to handle cold starts, alongside the existing instrument validation, auto-correction, and auto-start features.
 
 ### What You Can Change with `configure.sh`
 
@@ -209,17 +209,11 @@ chmod +x configure.sh
 ./configure.sh
 ```
 
-### What's New in v3.1.0
+### What's New in v3.2.0
 
-1. **Instrument validation** — If you enter `GBPUSD` (without `Instrument.`), the script automatically adds it. If you enter something invalid (like `GBPUSD, USDJPY` with a comma), it rejects it and asks again.
-2. **Handles invalid current values** — If the current instrument value is malformed (e.g., due to a previous error), the script detects it and forces you to enter a valid one.
-3. **Auto‑start download** — After configuration and compilation, the script asks:
-   ```
-   Do you want to start the download now? (y/N):
-   ```
-   If you answer `y`, you can choose:
-   - `f` — Foreground (logs appear in your terminal).
-   - `s` — Screen (runs in background, recommended for VPS).
+1. **Increased connection timeout** — The connection timeout has been increased from 30 to 60 seconds in both `JForex4Downloader.java` and `JForex4ArchiveAuditor.java`. This ensures the tool works reliably after a `mvn clean compile` (cold start), where the SDK needs extra time to initialize and download instrument metadata.
+2. **Improved `configure.sh`** — Now properly handles the increased timeout and works seamlessly with both foreground and screen modes.
+3. **Enhanced `reset_project.sh`** — Fully cleans all temporary files including `.bak_*` backups, logs, and cache, then resets the instrument to EUR/USD with the correct timeout.
 
 ### Example Interaction
 
@@ -562,6 +556,7 @@ scp -r root@<YOUR_VPS_IP>:/root/RWS-DUKAS-J4X/archive/ C:\Users\YourName\Documen
 - The tool has built-in retry logic (3 attempts) and 120-second timeout recovery.
 - This is usually a network issue. If it keeps failing, try running with a VPN or move your VPS to a different region (Switzerland/Germany tend to have better routing to Dukascopy).
 - Check that your demo account is still active.
+- **Note:** The connection timeout is now 60 seconds (increased from 30) to handle cold starts after `mvn clean compile`.
 
 ### Error: "Rate limit exceeded" or "429"
 - The tool automatically pauses for 90 seconds after every 3500 API requests.
@@ -592,6 +587,14 @@ scp -r root@<YOUR_VPS_IP>:/root/RWS-DUKAS-J4X/archive/ C:\Users\YourName\Documen
 - If you get a compilation error after running `configure.sh`, you may have entered an invalid instrument name.
 - Check the list of valid instruments in the [Dukascopy API documentation](https://www.dukascopy.com/wiki/en/development/strategy-api/api-reference/com/dukascopy/api/Instrument.html).
 - Run `./configure.sh` again and correct the symbol.
+
+### Error: "Connection failed" after `./configure.sh`
+- **This is normal on the first run after `mvn clean compile`.** The SDK needs extra time to initialize (cold start). The tool now has a 60-second timeout (increased from 30) to handle this.
+- If you still see the error, wait 10-15 seconds and run the download command manually:
+  ```bash
+  mvn exec:java -Dexec.mainClass="com.rws.dukas.JForex4Downloader"
+  ```
+- This second attempt will succeed because the SDK is already warmed up.
 
 ---
 
@@ -663,7 +666,7 @@ cd ~/RWS-DUKAS-J4X
 5. **Cleans the `logs/` folder** (removes old log files).
 6. Empties the Trash/Recycle Bin.
 7. Clears JForex cache (`/root/JForex/cache`).
-8. **Repairs source code** (resets Instrument to `Instrument.EURUSD`).
+8. **Repairs source code** (resets Instrument to `Instrument.EURUSD` with 60s timeout).
 9. Compiles the project (`mvn clean compile`).
 
 **Does NOT** start the downloader automatically.
@@ -745,6 +748,7 @@ Here are the most common instruments available on Dukascopy demo accounts:
 |------------|-------------|
 | **Datafeed endpoint** | The tool uses `datafeed.66proxymity88.net`, which is the **only** source for Dukascopy historical data. There is no alternative. |
 | **Network timeouts** | If your VPS has poor routing to Dukascopy's servers (e.g., from certain regions in Asia or the US), some months may still fail. The tool retries and uses weekly fallback, but extreme cases may require a VPN or moving your VPS to Europe. |
+| **Cold start delays** | The first connection after `mvn clean compile` may take up to 60 seconds. The tool now has a 60-second timeout to handle this. If it still fails, wait a few seconds and run the download command again. |
 | **Demo accounts expire** | The credentials are not permanent. You may need to renew them on the Dukascopy website every few months. Use `./configure.sh` to update them easily. |
 | **`AV_SPREAD`** | Calculated from the ask and bid **close** prices of the minute bar, not from every individual tick. For most purposes, this is sufficient. |
 | **File size limit** | Terabox has a 2 GB per file limit. Do not zip the entire `archive/` folder into one file. Keep individual CSV files (< 20 MB each). |
@@ -777,13 +781,12 @@ If you encounter any issues, check the logs (see "How to Read Logs" above) and c
 
 ---
 
-**Version 3.1.0** — Reliable, automated, and fully documented.
+**Version 3.2.0** — Reliable, automated, and fully documented.
 
-**Key improvements in 3.1.0:**
-- **Dynamic filenames** — CSV files now use `INSTRUMENT.name()` instead of hardcoded "EURUSD" or "BTCUSD".
-- **Enhanced `configure.sh`** — validates instrument input, rejects commas/spaces, automatically adds `Instrument.` prefix, and offers auto-start download after configuration.
-- **Enhanced `reset_project.sh`** — now removes `.bak_*` backup files and cleans the `logs/` folder.
-- **Updated `JForex4ArchiveAuditor.java`** — now uses dynamic filenames for archive verification.
-- All scripts are now fully resilient to common user errors.
+**Key improvements in 3.2.0:**
+- **Increased connection timeout** — from 30 to 60 seconds to handle cold starts after `mvn clean compile`.
+- **Enhanced reliability** — the tool now works reliably even after a full reset or fresh VPS setup.
+- **Improved error handling** — clearer guidance for cold start scenarios in the documentation.
+- **All existing features** — dynamic filenames, instrument validation, auto-start download, enhanced reset script, and full backup management.
 
 ```

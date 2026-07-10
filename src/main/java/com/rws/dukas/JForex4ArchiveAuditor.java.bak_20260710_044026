@@ -10,7 +10,6 @@ import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -18,28 +17,31 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
- * JForex 4 API Historical Data Downloader
+ * JForex 4 Archive Auditor & Backfill Tool
  * 
- * ENHANCED FEATURES:
- * 1. PRE-ARCHIVE DEEP SCAN & BACKFILL - Audits all months in a batch before archiving.
- *    If any month is FAILED or missing, it backfills automatically.
- * 2. RATE LIMITING (3500 requests) - Pauses 90 seconds when threshold is reached.
- * 3. TIMEOUT (RTO) HANDLING - Pauses 120 seconds specifically on read/connect timeouts.
- * 4. AUTO RESUME - Master progress ensures no manual intervention.
- * 5. DYNAMIC FILENAME - Uses INSTRUMENT.name() for CSV files.
+ * This tool scans the ENTIRE archive directory for all months.
+ * If a CSV file is missing, corrupt, or too small, it automatically
+ * backfills (re-downloads) that month and replaces the corrupt file.
+ * 
+ * FIXED: Uses dynamic instrument name for all file operations.
+ * 
+ * Purpose: Run this BEFORE migrating files to your local Mac.
+ * 
+ * Features:
+ * - Physical file verification (exists & size > 5KB).
+ * - Auto-backfill for corrupt/missing months.
+ * - Updates master progress file.
  */
-public class JForex4Downloader {
+public class JForex4ArchiveAuditor {
 
     // ==================== CONFIGURATION ====================
     private static final String USERNAME = "DEMO2YciXg";
     private static final String PASSWORD = "YciXg";
     private static final String JNLP_URL = "http://platform.dukascopy.com/demo_4/jforex_4.jnlp";
 
-    private static final Instrument INSTRUMENT = Instrument.USDJPY;
+    private static final Instrument INSTRUMENT = Instrument.EURUSD;
     private static final String OUTPUT_DIR = "./ohlcv_output/";
     private static final String ARCHIVE_BASE_DIR = "./archive/";
-
-    // MASTER PROGRESS FILE - NEVER MOVED OR DELETED
     private static final String MASTER_PROGRESS_FILE = "./.master_download_progress.txt";
 
     private static final int START_YEAR = 2005;
@@ -54,16 +56,10 @@ public class JForex4Downloader {
     private static final long RETRY_BASE_DELAY_SECONDS = 30;
     private static final boolean ENABLE_WEEKLY_FALLBACK = true;
     private static final int CHUNK_DAYS = 7;
-
-    // Rate limiting (3500 requests)
-    private static final int RATE_LIMIT_THRESHOLD = 3500;
-    private static final long RATE_LIMIT_PAUSE_SECONDS = 90;
-
-    // Timeout specific pause (RTO)
     private static final long TIMEOUT_PAUSE_SECONDS = 120;
 
-    // Global request counter for rate limiting
-    private static int requestCounter = 0;
+    // Minimum file size in bytes (5KB is safe for a 1-minute OHLCV month)
+    private static final long MIN_VALID_FILE_SIZE = 5 * 1024;
 
     private static final DateTimeFormatter CSV_DATE_FORMAT =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -72,22 +68,26 @@ public class JForex4Downloader {
 
     // ==================== STATE ====================
     private static Set<String> completedMonths = new HashSet<>();
-    private static List<String> failedMonthsList = new ArrayList<>();
-    private static int monthsInCurrentBatch = 0;
-    private static int batchStartYear = START_YEAR;
+    private static int requestCounter = 0;
+    private static final int RATE_LIMIT_THRESHOLD = 3500;
+    private static final long RATE_LIMIT_PAUSE_SECONDS = 90;
 
     // ==================== MAIN ====================
     public static void main(String[] args) {
         System.out.println("============================================================");
-        System.out.println("=== JFOREK 4 API — ENHANCED: RATE LIMIT + TIMEOUT HANDLING ===");
+        System.out.println("=== JFOREK 4 ARCHIVE AUDITOR & BACKFILL ===");
         System.out.println("Instrument: " + INSTRUMENT);
         System.out.println("Range: " + START_YEAR + "-" + pad(START_MONTH) + "-" + pad(START_DAY) +
                            " to " + END_YEAR + "-" + pad(END_MONTH) + "-" + pad(END_DAY));
-        System.out.println("Batch size: " + BATCH_YEARS + " year(s)");
-        System.out.println("Rate limit: " + RATE_LIMIT_THRESHOLD + " requests -> pause " + RATE_LIMIT_PAUSE_SECONDS + "s");
-        System.out.println("Timeout pause: " + TIMEOUT_PAUSE_SECONDS + "s");
+        System.out.println("Archive base: " + ARCHIVE_BASE_DIR);
+        System.out.println("Min valid file size: " + MIN_VALID_FILE_SIZE + " bytes");
         System.out.println("============================================================");
 
+        // 1. Load master progress
+        completedMonths = loadMasterProgress();
+        log("Loaded " + completedMonths.size() + " entries from master progress.");
+
+        // 2. Prepare directories
         try {
             Files.createDirectories(Paths.get(OUTPUT_DIR));
             Files.createDirectories(Paths.get(ARCHIVE_BASE_DIR));
@@ -96,9 +96,7 @@ public class JForex4Downloader {
             return;
         }
 
-        completedMonths = loadMasterProgress();
-        determineBatchStart();
-
+        // 3. Connect to Dukascopy
         IClient client = null;
         try {
             client = ClientFactory.getDefaultInstance();
@@ -106,7 +104,7 @@ public class JForex4Downloader {
             client.connect(JNLP_URL, USERNAME, PASSWORD);
 
             int wait = 0;
-            while (!client.isConnected() && wait < 60) {
+            while (!client.isConnected() && wait < 30) {
                 Thread.sleep(1000);
                 wait++;
             }
@@ -131,10 +129,11 @@ public class JForex4Downloader {
             }
             log("IHistory acquired.");
 
-            // ========== PHASE 1: MAIN DOWNLOAD LOOP ==========
+            // ========== AUDIT LOOP ==========
             int totalMonths = 0;
-            int totalSuccess = 0;
-            int totalFailed = 0;
+            int corruptOrMissing = 0;
+            int backfillSuccess = 0;
+            int backfillFailed = 0;
 
             for (int year = START_YEAR; year <= END_YEAR; year++) {
                 int monthStart = (year == START_YEAR) ? START_MONTH : 1;
@@ -145,96 +144,55 @@ public class JForex4Downloader {
                     String monthKey = String.format("%04d-%02d", year, month);
                     totalMonths++;
 
-                    if (completedMonths.contains(monthKey + ": SUCCESS")) {
-                        log("SKIP: " + monthKey + " (already completed)");
-                        totalSuccess++;
+                    // 4. Check physical file in archive
+                    boolean fileValid = checkArchiveFile(monthKey);
+
+                    if (fileValid) {
+                        // If file is valid, ensure master progress says SUCCESS
+                        if (!completedMonths.contains(monthKey + ": SUCCESS")) {
+                            log("FIX: " + monthKey + " file exists but master progress missing. Updating...");
+                            markMasterProgress(monthKey, "SUCCESS");
+                        }
                         continue;
                     }
 
+                    // 5. File is missing or corrupt -> BACKFILL
+                    corruptOrMissing++;
+                    log("BACKFILL NEEDED: " + monthKey + " (missing or corrupt)");
+
+                    // Remove any old FAILED/SUCCESS status to force clean download
+                    completedMonths.remove(monthKey + ": SUCCESS");
+                    completedMonths.remove(monthKey + ": FAILED");
+
                     boolean ok = processMonthWithRetry(strategy.getHistory(), year, month);
                     if (ok) {
-                        totalSuccess++;
-                        completedMonths.add(monthKey + ": SUCCESS");
+                        backfillSuccess++;
                         markMasterProgress(monthKey, "SUCCESS");
-                        monthsInCurrentBatch++;
-                    } else {
-                        totalFailed++;
-                        failedMonthsList.add(monthKey);
-                        completedMonths.add(monthKey + ": FAILED");
-                        markMasterProgress(monthKey, "FAILED");
-                        monthsInCurrentBatch++;
-                    }
-
-                    // ========== BATCH ARCHIVING TRIGGER ==========
-                    if (monthsInCurrentBatch >= (BATCH_YEARS * 12)) {
-                        log("Batch limit reached (" + BATCH_YEARS + " years). Running pre-archive audit...");
-
-                        // Deep scan + backfill before archiving
-                        boolean auditPassed = auditAndBackfillBatch(strategy.getHistory(), batchStartYear);
-                        if (auditPassed) {
-                            archiveAndClearOutput(batchStartYear);
-                            batchStartYear += BATCH_YEARS;
-                            monthsInCurrentBatch = 0;
-                            log("Resuming batch from year: " + batchStartYear);
-                        } else {
-                            log("Audit failed. Some months in batch are still not SUCCESS. Delaying archive.");
-                            monthsInCurrentBatch = 0;
-                        }
-                    }
-                }
-            }
-
-            // Archive any remaining partial batch
-            if (monthsInCurrentBatch > 0) {
-                log("Final partial batch detected. Running pre-archive audit...");
-                boolean auditPassed = auditAndBackfillBatch(strategy.getHistory(), batchStartYear);
-                if (auditPassed) {
-                    archiveAndClearOutput(batchStartYear);
-                } else {
-                    log("Audit failed for final batch. Please check logs.");
-                }
-            }
-
-            // ========== PHASE 2: AUTO BACKFILL ==========
-            if (!failedMonthsList.isEmpty()) {
-                log("PHASE 2: Auto-backfilling " + failedMonthsList.size() + " failed months...");
-                List<String> stillFailed = new ArrayList<>();
-
-                for (String monthKey : failedMonthsList) {
-                    int year = Integer.parseInt(monthKey.substring(0, 4));
-                    int month = Integer.parseInt(monthKey.substring(5, 7));
-                    log("BACKFILL: " + monthKey);
-
-                    boolean ok = processMonthDirect(strategy.getHistory(), year, month);
-                    if (ok) {
-                        log("  -> BACKFILL SUCCESS for " + monthKey);
-                        completedMonths.remove(monthKey + ": FAILED");
-                        completedMonths.add(monthKey + ": SUCCESS");
-                        markMasterProgress(monthKey, "SUCCESS");
+                        // Move the newly created CSV to the correct archive folder
                         moveSingleFileToArchive(monthKey);
+                        log("  -> BACKFILL SUCCESS for " + monthKey);
                     } else {
+                        backfillFailed++;
+                        markMasterProgress(monthKey, "FAILED");
                         log("  -> BACKFILL FAILED for " + monthKey);
-                        stillFailed.add(monthKey);
                     }
                 }
-                failedMonthsList = stillFailed;
             }
 
-            // ========== PHASE 3: FINAL REPORT ==========
+            // ========== FINAL REPORT ==========
             log("============================================================");
-            log("FINAL REPORT");
-            log("Total months processed: " + totalMonths);
-            log("Successful: " + totalSuccess);
-            log("Failed: " + failedMonthsList.size());
+            log("AUDIT FINAL REPORT");
+            log("Total months expected: " + totalMonths);
+            log("Corrupt / Missing found: " + corruptOrMissing);
+            log("Backfill successful: " + backfillSuccess);
+            log("Backfill failed: " + backfillFailed);
             log("Total API requests made: " + requestCounter);
 
-            if (!failedMonthsList.isEmpty()) {
-                log("PERMANENTLY FAILED MONTHS:");
-                for (String m : failedMonthsList) {
-                    log("  - " + m);
-                }
+            if (backfillFailed == 0) {
+                log("ALL MONTHS ARE VALID AND ARCHIVED. SAFE TO MIGRATE TO MAC!");
             } else {
-                log("ALL MONTHS DOWNLOADED SUCCESSFULLY!");
+                log("WARNING: " + backfillFailed + " months could not be backfilled.");
+                log("Review the logs above and re-run this auditor later.");
             }
 
             client.stopStrategy(strategyId);
@@ -250,41 +208,47 @@ public class JForex4Downloader {
         }
     }
 
-    // ==================== PRE-ARCHIVE AUDIT & BACKFILL ====================
-    private static boolean auditAndBackfillBatch(IHistory history, int batchStartYear) {
-        int batchEndYear = Math.min(batchStartYear + BATCH_YEARS - 1, END_YEAR);
-        log("Auditing batch: " + batchStartYear + " to " + batchEndYear);
+    // ==================== CHECK ARCHIVE FILE (FIXED) ====================
+    private static boolean checkArchiveFile(String monthKey) {
+        // FIXED: Use dynamic instrument name
+        String fileName = INSTRUMENT.name() + "_" + monthKey + "_1min_OHLCV.csv";
+        int year = Integer.parseInt(monthKey.substring(0, 4));
 
-        boolean allSuccess = true;
-        for (int year = batchStartYear; year <= batchEndYear; year++) {
-            int monthStart = (year == batchStartYear) ? START_MONTH : 1;
-            int monthEnd = (year == batchEndYear) ? END_MONTH : 12;
-            for (int month = monthStart; month <= monthEnd; month++) {
-                if (year == END_YEAR && month > END_MONTH) break;
-                String monthKey = String.format("%04d-%02d", year, month);
+        // Determine correct archive folder
+        int startBatch = ((year - START_YEAR) / BATCH_YEARS) * BATCH_YEARS + START_YEAR;
+        int endBatch = Math.min(startBatch + BATCH_YEARS - 1, END_YEAR);
+        String archiveFolderName = startBatch + "-" + endBatch;
+        Path target = Paths.get(ARCHIVE_BASE_DIR + archiveFolderName + "/", fileName);
 
-                if (completedMonths.contains(monthKey + ": SUCCESS")) {
-                    // Trust master progress, no need to check file system
-                    continue;
+        if (!Files.exists(target)) {
+            log("  -> FILE MISSING: " + target);
+            return false;
+        }
+
+        try {
+            long size = Files.size(target);
+            if (size < MIN_VALID_FILE_SIZE) {
+                log("  -> FILE TOO SMALL: " + target + " (" + size + " bytes)");
+                return false;
+            }
+            // Optional: Quick row count check (header + at least 1 bar)
+            try (BufferedReader reader = Files.newBufferedReader(target)) {
+                String header = reader.readLine();
+                if (header == null || !header.startsWith("DATETIME,OPEN")) {
+                    log("  -> FILE CORRUPT (invalid header): " + target);
+                    return false;
                 }
-
-                log("  Found missing/failed month: " + monthKey + ". Attempting backfill...");
-                boolean ok = processMonthWithRetry(history, year, month);
-                if (ok) {
-                    completedMonths.remove(monthKey + ": FAILED");
-                    completedMonths.add(monthKey + ": SUCCESS");
-                    markMasterProgress(monthKey, "SUCCESS");
-                    log("  -> Backfill SUCCESS for " + monthKey);
-                } else {
-                    completedMonths.remove(monthKey + ": SUCCESS");
-                    completedMonths.add(monthKey + ": FAILED");
-                    markMasterProgress(monthKey, "FAILED");
-                    allSuccess = false;
-                    log("  -> Backfill FAILED for " + monthKey);
+                String firstLine = reader.readLine();
+                if (firstLine == null || firstLine.trim().isEmpty()) {
+                    log("  -> FILE CORRUPT (no data rows): " + target);
+                    return false;
                 }
             }
+            return true;
+        } catch (IOException e) {
+            log("  -> FILE READ ERROR: " + target + " (" + e.getMessage() + ")");
+            return false;
         }
-        return allSuccess;
     }
 
     // ==================== MASTER PROGRESS ====================
@@ -319,50 +283,9 @@ public class JForex4Downloader {
         }
     }
 
-    // ==================== BATCH DETERMINATION ====================
-    private static void determineBatchStart() {
-        int maxYear = START_YEAR - 1;
-        for (String entry : completedMonths) {
-            if (entry.endsWith("SUCCESS")) {
-                String monthKey = entry.substring(0, 7);
-                int year = Integer.parseInt(monthKey.substring(0, 4));
-                if (year > maxYear) maxYear = year;
-            }
-        }
-        batchStartYear = Math.max(maxYear + 1, START_YEAR);
-        if (batchStartYear > END_YEAR) batchStartYear = END_YEAR;
-    }
-
-    // ==================== BATCH ARCHIVING ====================
-    private static void archiveAndClearOutput(int batchStart) {
-        try {
-            int batchEnd = Math.min(batchStart + BATCH_YEARS - 1, END_YEAR);
-            String archiveFolderName = batchStart + "-" + batchEnd;
-            Path archivePath = Paths.get(ARCHIVE_BASE_DIR + archiveFolderName + "/");
-            Files.createDirectories(archivePath);
-
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(OUTPUT_DIR))) {
-                for (Path entry : stream) {
-                    String fileName = entry.getFileName().toString();
-                    if (fileName.endsWith(".csv")) {
-                        Path target = archivePath.resolve(fileName);
-                        if (!Files.exists(target)) {
-                            Files.move(entry, target, StandardCopyOption.REPLACE_EXISTING);
-                            log("  -> Moved: " + fileName + " to " + archiveFolderName + "/");
-                        } else {
-                            Files.delete(entry);
-                        }
-                    }
-                }
-            }
-            log("Batch " + archiveFolderName + " archived. Output dir cleared.");
-
-        } catch (IOException e) {
-            log("ERROR during archiving: " + e.getMessage());
-        }
-    }
-
+    // ==================== MOVE SINGLE FILE TO ARCHIVE (FIXED) ====================
     private static void moveSingleFileToArchive(String monthKey) {
+        // FIXED: Use dynamic instrument name
         String fileName = INSTRUMENT.name() + "_" + monthKey + "_1min_OHLCV.csv";
         Path src = Paths.get(OUTPUT_DIR, fileName);
         if (!Files.exists(src)) return;
@@ -375,33 +298,30 @@ public class JForex4Downloader {
 
         try {
             Files.createDirectories(target.getParent());
-            if (Files.exists(target)) {
-                Files.delete(src);
-            } else {
-                Files.move(src, target);
-            }
+            // Overwrite the corrupt/missing file
+            Files.move(src, target, StandardCopyOption.REPLACE_EXISTING);
+            log("  -> Replaced archive file: " + target);
         } catch (IOException e) {
-            log("Error moving single file: " + e.getMessage());
+            log("  -> Error moving file to archive: " + e.getMessage());
         }
     }
 
-    // ==================== REQUEST COUNTER (RATE LIMIT) ====================
+    // ==================== REQUEST COUNTER ====================
     private static synchronized void incrementRequestCounter() {
         requestCounter++;
         if (requestCounter % RATE_LIMIT_THRESHOLD == 0) {
-            log("RATE LIMIT: " + requestCounter + " requests reached. Pausing for " + RATE_LIMIT_PAUSE_SECONDS + " seconds...");
-            try {
-                Thread.sleep(RATE_LIMIT_PAUSE_SECONDS * 1000);
-            } catch (InterruptedException e) {
+            log("RATE LIMIT: " + requestCounter + " requests reached. Pausing " + RATE_LIMIT_PAUSE_SECONDS + "s...");
+            try { Thread.sleep(RATE_LIMIT_PAUSE_SECONDS * 1000); } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            log("Rate limit pause complete. Resuming.");
+            log("Rate limit pause complete.");
         }
     }
 
-    // ==================== PROCESS MONTH WITH RETRY ====================
+    // ==================== PROCESS MONTH WITH RETRY (FIXED) ====================
     private static boolean processMonthWithRetry(IHistory history, int year, int month) {
         String monthStr = String.format("%04d-%02d", year, month);
+        // FIXED: Use dynamic instrument name
         String outputFile = OUTPUT_DIR + INSTRUMENT.name() + "_" + monthStr + "_1min_OHLCV.csv";
 
         LocalDateTime startLdt = LocalDateTime.of(year, month, 1, 0, 0, 0);
@@ -421,88 +341,27 @@ public class JForex4Downloader {
             try {
                 incrementRequestCounter();
                 List<ITick> ticks = history.getTicks(INSTRUMENT, from, to);
-                if (ticks == null || ticks.isEmpty()) {
-                    log("  -> No ticks for " + monthStr);
-                    return false;
-                }
+                if (ticks == null || ticks.isEmpty()) return false;
                 Map<Long, MinuteBar> bars = aggregate(ticks);
                 writeCsv(outputFile, bars);
-                log("  -> SUCCESS: " + bars.size() + " bars (attempt " + attempt + ")");
                 return true;
-
             } catch (Exception e) {
                 boolean isTimeout = (e instanceof SocketTimeoutException) ||
                                     (e.getMessage() != null && e.getMessage().toLowerCase().contains("timed out"));
-
                 if (isTimeout) {
-                    log("  -> TIMEOUT (RTO) detected on attempt " + attempt + ". Pausing for " + TIMEOUT_PAUSE_SECONDS + " seconds...");
-                    try {
-                        Thread.sleep(TIMEOUT_PAUSE_SECONDS * 1000);
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                        return false;
-                    }
-                } else {
-                    log("  -> Attempt " + attempt + " FAILED: " + e.getMessage());
+                    log("  -> TIMEOUT. Pausing " + TIMEOUT_PAUSE_SECONDS + "s...");
+                    try { Thread.sleep(TIMEOUT_PAUSE_SECONDS * 1000); } catch (InterruptedException ignored) { return false; }
                 }
-
-                if (attempt < MAX_RETRIES) {
-                    long delay = isTimeout ? TIMEOUT_PAUSE_SECONDS : RETRY_BASE_DELAY_SECONDS * (long) Math.pow(2, attempt - 1);
-                    if (!isTimeout) {
-                        log("  -> Retrying in " + delay + " seconds...");
-                        try { Thread.sleep(delay * 1000); } catch (InterruptedException ignored) {}
-                    }
+                if (attempt < MAX_RETRIES && !isTimeout) {
+                    long delay = RETRY_BASE_DELAY_SECONDS * (long) Math.pow(2, attempt - 1);
+                    try { Thread.sleep(delay * 1000); } catch (InterruptedException ignored) {}
                 }
             }
         }
 
         if (ENABLE_WEEKLY_FALLBACK) {
-            log("  -> Falling back to weekly chunks for " + monthStr);
-            boolean weeklyOk = downloadMonthInChunks(history, year, month, outputFile);
-            if (weeklyOk) {
-                log("  -> Weekly fallback SUCCESS for " + monthStr);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean processMonthDirect(IHistory history, int year, int month) {
-        String monthStr = String.format("%04d-%02d", year, month);
-        String outputFile = OUTPUT_DIR + INSTRUMENT.name() + "_" + monthStr + "_1min_OHLCV.csv";
-
-        LocalDateTime startLdt = LocalDateTime.of(year, month, 1, 0, 0, 0);
-        LocalDateTime endLdt;
-        if (month == 12) {
-            endLdt = LocalDateTime.of(year + 1, 1, 1, 0, 0, 0).minusSeconds(1);
-        } else {
-            endLdt = LocalDateTime.of(year, month + 1, 1, 0, 0, 0).minusSeconds(1);
-        }
-        LocalDateTime globalEnd = LocalDateTime.of(END_YEAR, END_MONTH, END_DAY, 23, 59, 59);
-        if (endLdt.isAfter(globalEnd)) endLdt = globalEnd;
-
-        long from = startLdt.atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
-        long to = endLdt.atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
-
-        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-            try {
-                incrementRequestCounter();
-                List<ITick> ticks = history.getTicks(INSTRUMENT, from, to);
-                if (ticks != null && !ticks.isEmpty()) {
-                    Map<Long, MinuteBar> bars = aggregate(ticks);
-                    writeCsv(outputFile, bars);
-                    return true;
-                }
-            } catch (Exception e) {
-                boolean isTimeout = (e instanceof SocketTimeoutException) ||
-                                    (e.getMessage() != null && e.getMessage().toLowerCase().contains("timed out"));
-                if (isTimeout) {
-                    log("  -> BACKFILL TIMEOUT. Pausing " + TIMEOUT_PAUSE_SECONDS + "s...");
-                    try { Thread.sleep(TIMEOUT_PAUSE_SECONDS * 1000); } catch (InterruptedException ignored) {}
-                } else if (attempt < MAX_RETRIES) {
-                    try { Thread.sleep(RETRY_BASE_DELAY_SECONDS * attempt * 1000); } catch (InterruptedException ignored) {}
-                }
-            }
+            log("  -> Falling back to weekly chunks...");
+            return downloadMonthInChunks(history, year, month, outputFile);
         }
         return false;
     }
