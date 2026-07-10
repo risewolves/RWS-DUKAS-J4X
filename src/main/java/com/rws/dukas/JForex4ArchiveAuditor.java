@@ -39,7 +39,7 @@ public class JForex4ArchiveAuditor {
     private static final String PASSWORD = "YciXg";
     private static final String JNLP_URL = "http://platform.dukascopy.com/demo_4/jforex_4.jnlp";
 
-    private static final Instrument INSTRUMENT = Instrument.USDJPY;
+    private static final Instrument INSTRUMENT = Instrument.EURUSD;
     private static final String OUTPUT_DIR = "./ohlcv_output/";
     private static final String ARCHIVE_BASE_DIR = "./archive/";
     private static final String MASTER_PROGRESS_FILE = "./.master_download_progress.txt";

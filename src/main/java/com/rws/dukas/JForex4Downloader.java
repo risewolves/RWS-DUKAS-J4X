@@ -35,7 +35,7 @@ public class JForex4Downloader {
     private static final String PASSWORD = "YciXg";
     private static final String JNLP_URL = "http://platform.dukascopy.com/demo_4/jforex_4.jnlp";
 
-    private static final Instrument INSTRUMENT = Instrument.USDJPY;
+    private static final Instrument INSTRUMENT = Instrument.EURUSD;
     private static final String OUTPUT_DIR = "./ohlcv_output/";
     private static final String ARCHIVE_BASE_DIR = "./archive/";
 
