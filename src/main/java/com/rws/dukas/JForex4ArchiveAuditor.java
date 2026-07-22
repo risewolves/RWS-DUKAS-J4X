@@ -35,8 +35,8 @@ import java.util.concurrent.TimeUnit;
 public class JForex4ArchiveAuditor {
 
     // ==================== CONFIGURATION ====================
-    private static final String USERNAME = "DEMO2YciXg";
-    private static final String PASSWORD = "YciXg";
+    private static final String USERNAME = "DEMO2wmSbe";
+    private static final String PASSWORD = "wmSbe";
     private static final String JNLP_URL = "http://platform.dukascopy.com/demo_4/jforex_4.jnlp";
 
     private static final Instrument INSTRUMENT = Instrument.EURUSD;
@@ -49,7 +49,7 @@ public class JForex4ArchiveAuditor {
     private static final int START_DAY = 1;
     private static final int END_YEAR = 2026;
     private static final int END_MONTH = 7;
-    private static final int END_DAY = 10;
+    private static final int END_DAY = 21;
 
     private static final int BATCH_YEARS = 3;
     private static final int MAX_RETRIES = 3;
